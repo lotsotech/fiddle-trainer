@@ -653,7 +653,19 @@ function loadTune() {
     staffwidth: 700,
     paddingtop: 10,
     paddingbottom: 10,
-    add_classes: true
+    add_classes: true,
+    clickListener: function(abcElem, tuneNumber, classes, analysis, drag, mouseEvent) {
+      if (abcElem && abcElem.pitches && abcElem.pitches.length > 0 && violinPreset && audioCtx) {
+        ensureAudioCtx().then(() => {
+          for (const p of abcElem.pitches) {
+            const midi = abcjsPitchToMidi(p.pitch);
+            if (midi > 0) {
+              player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, audioCtx.currentTime, midi, 0.5, 1.0);
+            }
+          }
+        });
+      }
+    }
   });
 
   // Calculate total phrases based on measure count
