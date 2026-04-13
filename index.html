@@ -349,9 +349,10 @@ header h1 span { color: var(--accent); }
     </div>
   </div>
 
-  <div id="sheet-music-wrap">
+  <div id="sheet-music-wrap" style="display:none;">
     <div id="paper"></div>
   </div>
+  <div id="sheetToggle" style="text-align:center;cursor:pointer;padding:6px;background:var(--bg3);border-radius:6px;margin:4px 0;font-size:0.85rem;color:var(--text-dim);user-select:none;" onclick="toggleSheet()">▼ Show Sheet Music</div>
 
   <div class="progress-bar">
     <span class="progress-text" id="progressText">Phrase 0 / 0</span>
@@ -359,7 +360,7 @@ header h1 span { color: var(--accent); }
   </div>
 
   <div class="phrase-results" id="phraseResults" style="display:none;">
-    <div class="phrase-results-title">Current Phrase - Play Each Note</div>
+    <div class="phrase-results-title">Current Phrase <button id="btnToggleNotes" onclick="toggleNoteNames()" style="background:var(--bg3);color:var(--text-dim);border:1px solid var(--text-dim);border-radius:4px;padding:2px 8px;font-size:0.75rem;cursor:pointer;margin-left:8px;">Show Notes</button></div>
     <div class="notes-row" id="notesRow"></div>
   </div>
 
@@ -1192,14 +1193,40 @@ function stopRecording() {
   stopMic();
 }
 
+let noteNamesHidden = true;
+
 function renderNoteCells() {
   notesRow.innerHTML = '';
   currentPhraseNotes.forEach((n, i) => {
     const cell = document.createElement('div');
     cell.className = 'note-cell';
     cell.id = 'note-' + i;
-    cell.textContent = n.noteName.replace(/\d+$/, '');
+    cell.dataset.noteName = n.noteName.replace(/\d+$/, '');
+    cell.textContent = noteNamesHidden ? '?' : cell.dataset.noteName;
     notesRow.appendChild(cell);
+  });
+}
+
+function toggleSheet() {
+  const wrap = document.getElementById('sheet-music-wrap');
+  const toggle = document.getElementById('sheetToggle');
+  if (wrap.style.display === 'none') {
+    wrap.style.display = 'block';
+    toggle.textContent = '▲ Hide Sheet Music';
+  } else {
+    wrap.style.display = 'none';
+    toggle.textContent = '▼ Show Sheet Music';
+  }
+}
+
+function toggleNoteNames() {
+  noteNamesHidden = !noteNamesHidden;
+  const btn = document.getElementById('btnToggleNotes');
+  btn.textContent = noteNamesHidden ? 'Show Notes' : 'Hide Notes';
+  document.querySelectorAll('.note-cell').forEach(cell => {
+    if (!cell.classList.contains('correct') && !cell.classList.contains('close') && !cell.classList.contains('wrong')) {
+      cell.textContent = noteNamesHidden ? '?' : (cell.dataset.noteName || '?');
+    }
   });
 }
 
@@ -1282,6 +1309,8 @@ function markNote(index, result, detectedName) {
   if (!cell) return;
   cell.classList.remove('active');
   cell.classList.add(result);
+  // Reveal the correct note name after grading
+  cell.textContent = cell.dataset.noteName || '?';
   if (detectedName) {
     const det = document.createElement('div');
     det.className = 'detected';
