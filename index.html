@@ -143,20 +143,24 @@ header h1 span { color: var(--accent); }
 }
 
 #paper svg * {
-  fill: #000;
-  stroke: #000;
+  fill: #333;
+  stroke: #555;
 }
 
 #paper svg .abcjs-staff-line,
-#paper svg .abcjs-ledger-line,
+#paper svg .abcjs-ledger-line {
+  stroke: #999 !important;
+  stroke-width: 0.6px;
+}
+
 #paper svg .abcjs-bar {
-  stroke: #000 !important;
-  stroke-width: 0.7px;
+  stroke: #555 !important;
 }
 
 #paper svg text {
-  fill: #000 !important;
+  fill: #333 !important;
   stroke: none !important;
+  font-weight: normal;
 }
 
 /* Highlight current phrase measures */
