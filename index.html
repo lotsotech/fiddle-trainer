@@ -570,8 +570,8 @@ function ensureAudioCtx() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     player = new WebAudioFontPlayer();
   }
-  if (!violinPreset && typeof _tone_0410_Aspirin_sf2_file !== 'undefined') {
-    violinPreset = _tone_0410_Aspirin_sf2_file;
+  if (!violinPreset && typeof _tone_0400_JCLive_sf2_file !== 'undefined') {
+    violinPreset = _tone_0400_JCLive_sf2_file;
     player.adjustPreset(audioCtx, violinPreset);
     console.log('Violin preset loaded, zones:', violinPreset.zones?.length);
   }
