@@ -142,6 +142,22 @@ header h1 span { color: var(--accent); }
   width: 100% !important;
 }
 
+#paper svg .abcjs-note, #paper svg .abcjs-beam-elem,
+#paper svg .abcjs-rest, #paper svg .abcjs-staff,
+#paper svg .abcjs-bar, #paper svg .abcjs-brace,
+#paper svg .abcjs-clef, #paper svg .abcjs-key-signature,
+#paper svg .abcjs-time-signature, #paper svg .abcjs-title,
+#paper svg .abcjs-staff-extra {
+  fill: #000;
+  stroke: #000;
+}
+
+#paper svg text {
+  fill: #000 !important;
+  stroke: none !important;
+  font-weight: bold;
+}
+
 /* Highlight current phrase measures */
 #paper .abcjs-note.abcjs-highlight,
 #paper .abcjs-beam-elem.abcjs-highlight,
