@@ -142,20 +142,21 @@ header h1 span { color: var(--accent); }
   width: 100% !important;
 }
 
-#paper svg .abcjs-note, #paper svg .abcjs-beam-elem,
-#paper svg .abcjs-rest, #paper svg .abcjs-staff,
-#paper svg .abcjs-bar, #paper svg .abcjs-brace,
-#paper svg .abcjs-clef, #paper svg .abcjs-key-signature,
-#paper svg .abcjs-time-signature, #paper svg .abcjs-title,
-#paper svg .abcjs-staff-extra {
+#paper svg * {
   fill: #000;
   stroke: #000;
+}
+
+#paper svg .abcjs-staff-line,
+#paper svg .abcjs-ledger-line,
+#paper svg .abcjs-bar {
+  stroke: #000 !important;
+  stroke-width: 0.7px;
 }
 
 #paper svg text {
   fill: #000 !important;
   stroke: none !important;
-  font-weight: bold;
 }
 
 /* Highlight current phrase measures */
