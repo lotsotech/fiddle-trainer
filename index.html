@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiddle Ear Trainer</title>
+<script src="abcjs-basic-min.js"></script>
+<script src="WebAudioFontPlayer.js"></script>
+<script src="violin_preset.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #1a1a2e;
+  --bg2: #16213e;
+  --bg3: #0f3460;
+  --accent: #e94560;
+  --accent2: #533483;
+  --text: #eee;
+  --text-dim: #999;
+  --green: #00c853;
+  --red: #ff1744;
+  --yellow: #ffd600;
+  --radius: 10px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  width: 100%;
+  background: var(--bg2);
+  padding: 16px 20px;
+  text-align: center;
+  border-bottom: 2px solid var(--accent);
+}
+
+header h1 { font-size: 1.5rem; letter-spacing: 1px; }
+header h1 span { color: var(--accent); }
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.controls select, .controls button {
+  font-size: 1rem;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.controls select {
+  flex: 1;
+  min-width: 180px;
+  background: var(--bg3);
+  color: var(--text);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%23eee'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.key-badge {
+  background: var(--accent2);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: var(--radius);
+  font-weight: bold;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+.settings {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.setting-group label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.setting-group input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.setting-value { font-size: 0.9rem; font-weight: bold; }
+
+/* Sheet music area */
+#sheet-music-wrap {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  min-height: 120px;
+  overflow-x: auto;
+}
+
+#paper svg {
+  width: 100% !important;
+}
+
+/* Highlight current phrase measures */
+#paper .abcjs-note.abcjs-highlight,
+#paper .abcjs-beam-elem.abcjs-highlight,
+#paper .abcjs-note_selected {
+  fill: #e94560 !important;
+  stroke: #e94560 !important;
+}
+
+.progress-bar {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-bar .bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar .bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+.progress-text {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 14px 32px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s;
+  color: #fff;
+}
+
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-play { background: var(--bg3); }
+.btn-play:hover:not(:disabled) { background: #1a4a80; }
+.btn-record { background: var(--accent); }
+.btn-record:hover:not(:disabled) { background: #d63050; }
+.btn-record.recording { animation: pulse 1s infinite; }
+.btn-next { background: var(--accent2); }
+.btn-next:hover:not(:disabled) { background: #6a40a0; }
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(233,69,96,0.6); }
+  50% { box-shadow: 0 0 20px 6px rgba(233,69,96,0.3); }
+}
+
+.score-panel {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.score-item .score-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.score-item .score-val { font-size: 1.8rem; font-weight: bold; }
+.score-item .score-val.green { color: var(--green); }
+.score-item .score-val.red { color: var(--red); }
+.score-item .score-val.accent { color: var(--accent); }
+
+.status {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  min-height: 24px;
+}
+
+.pitch-monitor {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  min-height: 20px;
+}
+
+.pitch-monitor .detected-note {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Note results row */
+.phrase-results {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  min-height: 50px;
+}
+
+.phrase-results-title {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.notes-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.note-cell {
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background: var(--bg3);
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.note-cell.active { border-color: var(--accent); box-shadow: 0 0 12px rgba(233,69,96,0.4); }
+.note-cell.correct { background: rgba(0,200,83,0.2); border-color: var(--green); }
+.note-cell.close { background: rgba(255,214,0,0.2); border-color: var(--yellow); }
+.note-cell.wrong { background: rgba(255,23,68,0.2); border-color: var(--red); }
+
+.note-cell .detected {
+  position: absolute;
+  bottom: -18px;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+@media (max-width: 400px) {
+  .note-cell { width: 44px; height: 44px; font-size: 0.95rem; }
+  .btn { padding: 12px 22px; font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span>Fiddle</span> Ear Trainer</h1>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <select id="tuneSelect"></select>
+    <div class="key-badge" id="keyBadge">D</div>
+  </div>
+
+  <div class="settings">
+    <div class="setting-group">
+      <label>Tempo: <span class="setting-value" id="tempoVal">90</span> BPM</label>
+      <input type="range" id="tempoSlider" min="60" max="160" value="90">
+    </div>
+    <div class="setting-group">
+      <label>Measures per phrase: <span class="setting-value" id="phraseVal">2</span></label>
+      <select id="phraseSelect" style="background:var(--bg3);color:var(--text);border:none;border-radius:6px;padding:6px 10px;font-size:0.95rem;">
+        <option value="1">1 measure</option>
+        <option value="2" selected>2 measures</option>
+        <option value="4">4 measures</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="sheet-music-wrap">
+    <div id="paper"></div>
+  </div>
+
+  <div class="progress-bar">
+    <span class="progress-text" id="progressText">Phrase 0 / 0</span>
+    <div class="bar-track"><div class="bar-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="phrase-results" id="phraseResults" style="display:none;">
+    <div class="phrase-results-title">Current Phrase - Play Each Note</div>
+    <div class="notes-row" id="notesRow"></div>
+  </div>
+
+  <div class="pitch-monitor" id="pitchMonitor"></div>
+
+  <div class="actions">
+    <button class="btn btn-play" id="btnPlay" disabled>&#9654; Play</button>
+    <button class="btn btn-record" id="btnRecord" disabled>&#9679; Record</button>
+    <button class="btn btn-next" id="btnNext" disabled>Next &#9654;</button>
+  </div>
+
+  <div class="score-panel">
+    <div class="score-item">
+      <div class="score-label">Correct</div>
+      <div class="score-val green" id="scoreCorrect">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Close</div>
+      <div class="score-val accent" id="scoreClose">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Missed</div>
+      <div class="score-val red" id="scoreMissed">0</div>
+    </div>
+  </div>
+
+  <div class="status" id="status">Select a tune and press Play to begin.</div>
+</div>
+
+<script>
+// ============================================================
+// TUNE LIBRARY - Full ABC notation
+// ============================================================
+const TUNES = [
+  {
+    name: "Soldier's Joy",
+    key: "D",
+    abc: `X:1
+T:Soldier's Joy
+M:4/4
+L:1/8
+K:D
+|:FG|AFDF AFDF|ABde d2cB|AFDF AFDF|GBEG E2FG|
+AFDF AFDF|ABde d2de|fafd egec|d2D2 D2:|
+|:de|f2fd adfd|edef e2de|f2fd adfd|edcB A2de|
+f2fd adfd|edef e2de|fafd egec|d2D2 D2:|`
+  },
+  {
+    name: "Sail Away Ladies",
+    key: "G",
+    abc: `X:1
+T:Sail Away Ladies
+M:4/4
+L:1/8
+K:G
+|:D2|GBAG EDEG|B2BA G2AB|dBAG EDEG|B2BA G2D2|
+GBAG EDEG|B2BA G2AB|dBAG EDEG|B2BA G2:|
+|:Bd|g2gf ged2|BdBd g2fg|a2ag edBd|e2ed B2Bd|
+g2gf ged2|BdBd g2fg|a2ag edBG|B2BA G2:|`
+  },
+  {
+    name: "Old Joe Clark",
+    key: "A Mix",
+    abc: `X:1
+T:Old Joe Clark
+M:4/4
+L:1/8
+K:AMix
+|:E2|A2AB cBce|a2ab a2gf|e2ef gfed|cBAG E2E2|
+A2AB cBce|a2ab a2gf|ecAc BAGE|A4 A2:|
+|:ef|g2gfgage|a4 a2ef|g2gf gage|edcB A2ef|
+g2gf gage|a4 a2gf|ecAc BAGE|A4 A2:|`
+  },
+  {
+    name: "Cripple Creek",
+    key: "A",
+    abc: `X:1
+T:Cripple Creek
+M:4/4
+L:1/8
+K:A
+|:A2|e2ef ecAc|BAFA BAFA|e2ef ecAc|B2AF A2A2|
+e2ef ecAc|BAFA BAFA|e2ef ecAc|B2AF A2:|
+|:ce|a2ae fece|a2ae fece|a2ae fecA|B2AF A2ce|
+a2ae fece|a2ae fece|a2ae fecA|B2AF A2:|`
+  },
+  {
+    name: "Angelina Baker",
+    key: "D",
+    abc: `X:1
+T:Angelina Baker
+M:4/4
+L:1/8
+K:D
+|:d2|ABdA BdAB|dBBA F2Ad|ABde fede|fABd A2d2|
+ABdA BdAB|dBBA F2Ad|ABde fede|fABd A2:|
+|:fg|afed fede|fBBA B2fg|afed fede|fABd A2fg|
+afed fede|fBBA B2fg|afed fede|fABd A2:|`
+  }
+];
+
+// ============================================================
+// APP STATE
+// ============================================================
+let audioCtx = null;
+let player = null;
+let violinPreset = null;
+let currentTuneIndex = 0;
+let visualObj = null;       // ABCJS render object
+let currentSynth = null;    // ABCJS synth instance
+let synthReady = false;
+
+let phraseLength = 2;       // measures per phrase
+let currentPhraseIndex = 0; // which phrase we're on
+let totalPhrases = 0;
+let tempo = 90;
+
+let scoreCorrect = 0;
+let scoreClose = 0;
+let scoreMissed = 0;
+
+let isPlaying = false;
+let isRecording = false;
+
+let micStream = null;
+let analyserNode = null;
+let micSource = null;
+let pitchBuffer = null;
+let recordingNoteIndex = 0;
+let animFrameId = null;
+
+// Parsed notes for current phrase (for pitch checking)
+let currentPhraseNotes = [];
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const tuneSelect = document.getElementById('tuneSelect');
+const keyBadge = document.getElementById('keyBadge');
+const tempoSlider = document.getElementById('tempoSlider');
+const tempoVal = document.getElementById('tempoVal');
+const phraseSelect = document.getElementById('phraseSelect');
+const phraseValSpan = document.getElementById('phraseVal');
+const notesRow = document.getElementById('notesRow');
+const phraseResults = document.getElementById('phraseResults');
+const btnPlay = document.getElementById('btnPlay');
+const btnRecord = document.getElementById('btnRecord');
+const btnNext = document.getElementById('btnNext');
+const elScoreCorrect = document.getElementById('scoreCorrect');
+const elScoreClose = document.getElementById('scoreClose');
+const elScoreMissed = document.getElementById('scoreMissed');
+const statusEl = document.getElementById('status');
+const progressText = document.getElementById('progressText');
+const progressFill = document.getElementById('progressFill');
+const pitchMonitor = document.getElementById('pitchMonitor');
+
+// ============================================================
+// MIDI / FREQUENCY HELPERS
+// ============================================================
+function midiToFreq(midi) {
+  return 440 * Math.pow(2, (midi - 69) / 12);
+}
+
+function freqToMidi(freq) {
+  return 69 + 12 * Math.log2(freq / 440);
+}
+
+function midiToNoteName(midi) {
+  const names = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  return names[midi % 12] + (Math.floor(midi / 12) - 1);
+}
+
+function centsDiff(freq, targetMidi) {
+  return 1200 * Math.log2(freq / midiToFreq(targetMidi));
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  TUNES.forEach((t, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${t.name} (${t.key})`;
+    tuneSelect.appendChild(opt);
+  });
+
+  tuneSelect.addEventListener('change', () => {
+    currentTuneIndex = parseInt(tuneSelect.value);
+    loadTune();
+  });
+
+  tempoSlider.addEventListener('input', () => {
+    tempo = parseInt(tempoSlider.value);
+    tempoVal.textContent = tempo;
+  });
+
+  phraseSelect.addEventListener('change', () => {
+    phraseLength = parseInt(phraseSelect.value);
+    phraseValSpan.textContent = phraseLength;
+    loadTune();
+  });
+
+  btnPlay.addEventListener('click', () => playPhrase());
+  btnRecord.addEventListener('click', toggleRecord);
+  btnNext.addEventListener('click', nextPhrase);
+
+  loadTune();
+  setStatus('Select a tune and press Play to begin.');
+}
+
+function ensureAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    player = new WebAudioFontPlayer();
+  }
+  if (!violinPreset && typeof _tone_0410_Aspirin_sf2_file !== 'undefined') {
+    violinPreset = _tone_0410_Aspirin_sf2_file;
+    player.adjustPreset(audioCtx, violinPreset);
+    console.log('Violin preset loaded, zones:', violinPreset.zones?.length);
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+// ============================================================
+// TUNE LOADING & RENDERING
+// ============================================================
+function loadTune() {
+  stopRecording();
+  const tune = TUNES[currentTuneIndex];
+  keyBadge.textContent = tune.key;
+
+  // Render the full tune as sheet music
+  visualObj = ABCJS.renderAbc("paper", tune.abc, {
+    responsive: "resize",
+    staffwidth: 700,
+    paddingtop: 10,
+    paddingbottom: 10,
+    add_classes: true
+  });
+
+  // Calculate total phrases based on measure count
+  const totalMeasures = countMeasures();
+  totalPhrases = Math.ceil(totalMeasures / phraseLength);
+  currentPhraseIndex = 0;
+  scoreCorrect = 0; scoreClose = 0; scoreMissed = 0;
+  updateScoreDisplay();
+  phraseResults.style.display = 'none';
+
+  highlightCurrentPhrase();
+  updateProgress();
+  btnPlay.disabled = false;
+  btnRecord.disabled = false;
+  btnNext.disabled = true;
+  setStatus(`Loaded "${tune.name}" - ${totalMeasures} measures, ${totalPhrases} phrases.`);
+}
+
+function countMeasures() {
+  if (!visualObj || !visualObj[0]) return 0;
+  const lines = visualObj[0].lines;
+  let count = 0;
+  for (const line of lines) {
+    if (line.staff) {
+      for (const staff of line.staff) {
+        for (const voice of staff.voices) {
+          for (const elem of voice) {
+            if (elem.el_type === 'bar') count++;
+          }
+        }
+      }
+    }
+  }
+  // The first measure may not have a leading bar, so add 1
+  return Math.max(count, 1);
+}
+
+// ============================================================
+// PHRASE HIGHLIGHTING ON SHEET MUSIC
+// ============================================================
+function highlightCurrentPhrase() {
+  // Clear all highlights
+  const allNotes = document.querySelectorAll('#paper .abcjs-note, #paper .abcjs-beam-elem, #paper .abcjs-rest');
+  allNotes.forEach(el => {
+    el.style.fill = '';
+    el.style.stroke = '';
+  });
+
+  if (!visualObj || !visualObj[0]) return;
+
+  // Find notes belonging to current phrase measures
+  const startMeasure = currentPhraseIndex * phraseLength;
+  const endMeasure = startMeasure + phraseLength;
+
+  const lines = visualObj[0].lines;
+  let measureIndex = 0;
+  let inPhrase = false;
+  const phraseNoteElements = [];
+
+  for (const line of lines) {
+    if (!line.staff) continue;
+    for (const staff of line.staff) {
+      for (const voice of staff.voices) {
+        // Start at measure 0
+        if (measureIndex >= startMeasure && measureIndex < endMeasure) {
+          inPhrase = true;
+        }
+        for (const elem of voice) {
+          if (elem.el_type === 'bar') {
+            measureIndex++;
+            inPhrase = (measureIndex >= startMeasure && measureIndex < endMeasure);
+            continue;
+          }
+          if (inPhrase && (elem.el_type === 'note' || elem.el_type === 'rest')) {
+            if (elem.abselem && elem.abselem.elemset) {
+              phraseNoteElements.push(elem);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Highlight them with red color
+  phraseNoteElements.forEach(elem => {
+    if (elem.abselem && elem.abselem.elemset) {
+      elem.abselem.elemset.forEach(svgEl => {
+        if (svgEl) {
+          svgEl.style.fill = '#e94560';
+          svgEl.style.stroke = '#e94560';
+        }
+      });
+    }
+  });
+
+  // Also extract pitch info for recording comparison
+  extractPhraseNotes(startMeasure, endMeasure);
+}
+
+function extractPhraseNotes(startMeasure, endMeasure) {
+  currentPhraseNotes = [];
+  if (!visualObj || !visualObj[0]) return;
+
+  // Collect all notes with their measure numbers
+  const allNotes = [];
+  const lines = visualObj[0].lines;
+  let measureIndex = 0;
+
+  for (const line of lines) {
+    if (!line.staff) continue;
+    for (const staff of line.staff) {
+      if (!staff.voices || !staff.voices[0]) continue;
+      const voice = staff.voices[0]; // first voice only
+      for (const elem of voice) {
+        if (elem.el_type === 'bar') {
+          measureIndex++;
+          continue;
+        }
+        if (elem.el_type === 'note' && elem.pitches) {
+          for (const p of elem.pitches) {
+            const midi = abcjsPitchToMidi(p.pitch);
+            const noteName = midiToNoteName(midi);
+            const duration = elem.duration || 0.125;
+            if (midi > 0) {
+              allNotes.push({ midi, noteName, duration, measure: measureIndex, abselem: elem.abselem });
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Filter notes in the phrase range
+  currentPhraseNotes = allNotes.filter(n => n.measure >= startMeasure && n.measure < endMeasure);
+
+  console.log(`Phrase measures ${startMeasure}-${endMeasure}: ${currentPhraseNotes.length} notes`,
+    currentPhraseNotes.map(n => n.noteName));
+}
+
+function abcjsPitchToMidi(pitch) {
+  // ABCJS uses a diatonic pitch system:
+  // pitch 0 = C4 (middle C), 1 = D4, 2 = E4, 3 = F4, 4 = G4, 5 = A4, 6 = B4
+  // pitch 7 = C5, etc.
+  // Negative: -1 = B3, -2 = A3, etc.
+  const scaleToSemitone = [0, 2, 4, 5, 7, 9, 11]; // C D E F G A B
+  const octave = Math.floor(pitch / 7);
+  let degree = pitch % 7;
+  if (degree < 0) { degree += 7; }
+  const baseMidi = 60; // C4
+  return baseMidi + octave * 12 + scaleToSemitone[degree];
+}
+
+// ============================================================
+// PLAYBACK via ABCJS Synth
+// ============================================================
+async function playPhrase() {
+  if (isPlaying || isRecording) return;
+  ensureAudioCtx();
+
+  if (!violinPreset) {
+    setStatus('Violin sound not loaded yet. Click and try again.');
+    return;
+  }
+
+  if (currentPhraseNotes.length === 0) {
+    setStatus('No notes in current phrase.');
+    return;
+  }
+
+  isPlaying = true;
+  btnPlay.disabled = true;
+  btnRecord.disabled = true;
+  setStatus('Playing phrase...');
+
+  try {
+    const beatDuration = 60 / tempo; // duration of one eighth note at current tempo
+    let time = audioCtx.currentTime + 0.1;
+
+    currentPhraseNotes.forEach((n, i) => {
+      // duration is in ABC units (1 = whole note, 0.5 = half, 0.125 = eighth)
+      const dur = n.duration * 4 * beatDuration; // convert to seconds
+      const noteOnDelay = (time - audioCtx.currentTime) * 1000;
+
+      // Highlight note cell during playback
+      setTimeout(() => {
+        document.querySelectorAll('.note-cell').forEach(c => c.classList.remove('active'));
+        const cell = document.getElementById('note-' + i);
+        if (cell) cell.classList.add('active');
+      }, noteOnDelay);
+
+      player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, time, n.midi, dur * 0.9, 1.0);
+      time += dur;
+    });
+
+    const totalDur = (time - audioCtx.currentTime) * 1000;
+    await new Promise(resolve => setTimeout(resolve, totalDur + 200));
+
+    document.querySelectorAll('.note-cell').forEach(c => c.classList.remove('active'));
+  } catch (e) {
+    console.error('Playback error:', e);
+    setStatus('Playback error: ' + e.message);
+  }
+
+  isPlaying = false;
+  btnPlay.disabled = false;
+  btnRecord.disabled = false;
+  setStatus('Your turn! Press Record and play the phrase on your fiddle.');
+}
+
+function buildPhraseAbc() {
+  // Extract the ABC for the current phrase from the tune
+  const tune = TUNES[currentTuneIndex];
+  const lines = tune.abc.split('\n');
+  let header = '';
+  let body = '';
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.match(/^[A-Z]:/)) {
+      if (trimmed.startsWith('Q:')) continue; // we'll set our own tempo
+      header += trimmed + '\n';
+    } else if (trimmed.length > 0) {
+      body += trimmed + ' ';
+    }
+  }
+
+  // Add tempo header
+  header += `Q:1/4=${tempo}\n`;
+
+  // Split body into measures by barlines
+  const measures = splitIntoMeasures(body.trim());
+  const startMeasure = currentPhraseIndex * phraseLength;
+  const endMeasure = Math.min(startMeasure + phraseLength, measures.length);
+
+  const phraseMeasures = measures.slice(startMeasure, endMeasure);
+  const phraseBody = phraseMeasures.join('|');
+
+  return header + phraseBody + '|]';
+}
+
+function splitIntoMeasures(body) {
+  // Split ABC body into individual measures
+  // Remove repeat markers for splitting
+  const cleaned = body.replace(/:\|/g, '|').replace(/\|:/g, '|').replace(/\|\|/g, '|');
+  const parts = cleaned.split('|').filter(p => p.trim().length > 0);
+  return parts;
+}
+
+// ============================================================
+// PITCH DETECTION (autocorrelation)
+// ============================================================
+function autoCorrelate(buf, sampleRate) {
+  const SIZE = buf.length;
+  let rms = 0;
+  for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
+  rms = Math.sqrt(rms / SIZE);
+  if (rms < 0.01) return -1;
+
+  let r1 = 0, r2 = SIZE - 1;
+  const threshold = 0.2;
+  for (let i = 0; i < SIZE / 2; i++) {
+    if (Math.abs(buf[i]) >= threshold) { r1 = i; break; }
+  }
+  for (let i = SIZE - 1; i >= SIZE / 2; i--) {
+    if (Math.abs(buf[i]) >= threshold) { r2 = i; break; }
+  }
+
+  const trimmed = buf.slice(r1, r2 + 1);
+  const len = trimmed.length;
+  if (len < 2) return -1;
+
+  const corr = new Float32Array(len);
+  for (let lag = 0; lag < len; lag++) {
+    let sum = 0;
+    for (let i = 0; i < len - lag; i++) {
+      sum += trimmed[i] * trimmed[i + lag];
+    }
+    corr[lag] = sum;
+  }
+
+  let d = 0;
+  while (d < len - 1 && corr[d] > corr[d + 1]) d++;
+  if (d >= len - 1) return -1;
+
+  let maxVal = -1, maxPos = -1;
+  for (let i = d; i < len; i++) {
+    if (corr[i] > maxVal) { maxVal = corr[i]; maxPos = i; }
+  }
+  if (maxPos <= 0) return -1;
+
+  const y1 = corr[maxPos - 1] || 0;
+  const y2 = corr[maxPos];
+  const y3 = corr[maxPos + 1] || 0;
+  const denom = 2 * (2 * y2 - y1 - y3);
+  const shift = denom !== 0 ? (y3 - y1) / denom : 0;
+  const refinedPos = maxPos + (isFinite(shift) ? shift : 0);
+
+  return sampleRate / refinedPos;
+}
+
+// ============================================================
+// RECORDING / MIC
+// ============================================================
+async function startMic() {
+  if (micStream) return;
+  ensureAudioCtx();
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    micSource = audioCtx.createMediaStreamSource(micStream);
+    analyserNode = audioCtx.createAnalyser();
+    analyserNode.fftSize = 4096;
+    micSource.connect(analyserNode);
+    pitchBuffer = new Float32Array(analyserNode.fftSize);
+  } catch (e) {
+    setStatus('Microphone access denied. Please allow mic access.');
+    throw e;
+  }
+}
+
+function stopMic() {
+  if (micStream) {
+    micStream.getTracks().forEach(t => t.stop());
+    micStream = null;
+  }
+  if (micSource) { micSource.disconnect(); micSource = null; }
+  analyserNode = null;
+}
+
+async function toggleRecord() {
+  if (isRecording) { stopRecording(); return; }
+  if (isPlaying) return;
+
+  try { await startMic(); } catch (e) { return; }
+
+  isRecording = true;
+  recordingNoteIndex = 0;
+  btnRecord.classList.add('recording');
+  btnRecord.innerHTML = '&#9632; Stop';
+  btnPlay.disabled = true;
+  btnNext.disabled = true;
+
+  // Show phrase results with note cells
+  renderNoteCells();
+  phraseResults.style.display = 'block';
+
+  setStatus('Listening... play the notes on your fiddle!');
+  highlightCurrentRecordNote();
+  listenForNotes();
+}
+
+function stopRecording() {
+  isRecording = false;
+  if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+  btnRecord.classList.remove('recording');
+  btnRecord.innerHTML = '&#9679; Record';
+  btnPlay.disabled = false;
+  pitchMonitor.innerHTML = '';
+  document.querySelectorAll('.note-cell').forEach(c => c.classList.remove('active'));
+  stopMic();
+}
+
+function renderNoteCells() {
+  notesRow.innerHTML = '';
+  currentPhraseNotes.forEach((n, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'note-cell';
+    cell.id = 'note-' + i;
+    cell.textContent = n.noteName.replace(/\d+$/, '');
+    notesRow.appendChild(cell);
+  });
+}
+
+function highlightCurrentRecordNote() {
+  document.querySelectorAll('.note-cell').forEach(c => c.classList.remove('active'));
+  const cell = document.getElementById('note-' + recordingNoteIndex);
+  if (cell) cell.classList.add('active');
+}
+
+function listenForNotes() {
+  if (!isRecording || recordingNoteIndex >= currentPhraseNotes.length) {
+    finishRecording();
+    return;
+  }
+
+  const target = currentPhraseNotes[recordingNoteIndex];
+  const targetMidi = target.midi;
+  let stableCount = 0;
+  const REQUIRED_STABLE = 3;
+
+  const beatDur = 60 / tempo;
+  const noteDur = target.duration * 4 * beatDur; // duration is in fractions of whole note
+  const timeLimit = Math.max(noteDur * 6, 3) * 1000;
+  const startTime = performance.now();
+
+  function detect() {
+    if (!isRecording) return;
+
+    if (performance.now() - startTime > timeLimit) {
+      markNote(recordingNoteIndex, 'wrong', null);
+      scoreMissed++;
+      updateScoreDisplay();
+      recordingNoteIndex++;
+      highlightCurrentRecordNote();
+      listenForNotes();
+      return;
+    }
+
+    analyserNode.getFloatTimeDomainData(pitchBuffer);
+    const freq = autoCorrelate(pitchBuffer, audioCtx.sampleRate);
+
+    if (freq > 0 && freq > 80 && freq < 2000) {
+      const detectedMidi = freqToMidi(freq);
+      const detectedName = midiToNoteName(Math.round(detectedMidi));
+      const cents = centsDiff(freq, targetMidi);
+
+      pitchMonitor.innerHTML = `Hearing: <span class="detected-note">${detectedName}</span> (${Math.round(cents)} cents)`;
+
+      if (Math.abs(cents) < 50) {
+        stableCount++;
+        if (stableCount >= REQUIRED_STABLE) {
+          if (Math.abs(cents) < 20) {
+            markNote(recordingNoteIndex, 'correct', detectedName);
+            scoreCorrect++;
+          } else {
+            markNote(recordingNoteIndex, 'close', detectedName);
+            scoreClose++;
+          }
+          updateScoreDisplay();
+          recordingNoteIndex++;
+          highlightCurrentRecordNote();
+          setTimeout(() => listenForNotes(), 300);
+          return;
+        }
+      } else {
+        if (Math.abs(cents) > 100 && Math.abs(Math.round(detectedMidi) - targetMidi) >= 2) {
+          stableCount = 0;
+        }
+      }
+    }
+
+    animFrameId = requestAnimationFrame(detect);
+  }
+
+  animFrameId = requestAnimationFrame(detect);
+}
+
+function markNote(index, result, detectedName) {
+  const cell = document.getElementById('note-' + index);
+  if (!cell) return;
+  cell.classList.remove('active');
+  cell.classList.add(result);
+  if (detectedName) {
+    const det = document.createElement('div');
+    det.className = 'detected';
+    det.textContent = detectedName;
+    cell.appendChild(det);
+  }
+}
+
+function finishRecording() {
+  stopRecording();
+  setStatus(`Phrase done! Press Next to continue.`);
+  btnNext.disabled = false;
+  btnPlay.disabled = false;
+}
+
+function nextPhrase() {
+  currentPhraseIndex++;
+  if (currentPhraseIndex >= totalPhrases) {
+    setStatus('Tune complete! Great practice session. Select another tune or restart.');
+    btnPlay.disabled = true;
+    btnRecord.disabled = true;
+    btnNext.disabled = true;
+    phraseResults.style.display = 'none';
+    return;
+  }
+  phraseResults.style.display = 'none';
+  highlightCurrentPhrase();
+  updateProgress();
+  btnPlay.disabled = false;
+  btnRecord.disabled = false;
+  btnNext.disabled = true;
+  setStatus('Press Play to hear the next phrase, or Record to jump in.');
+}
+
+function updateProgress() {
+  progressText.textContent = `Phrase ${currentPhraseIndex + 1} / ${totalPhrases}`;
+  progressFill.style.width = (totalPhrases > 0 ? ((currentPhraseIndex) / totalPhrases * 100) : 0) + '%';
+}
+
+function updateScoreDisplay() {
+  elScoreCorrect.textContent = scoreCorrect;
+  elScoreClose.textContent = scoreClose;
+  elScoreMissed.textContent = scoreMissed;
+}
+
+function setStatus(msg) {
+  statusEl.textContent = msg;
+}
+
+// ============================================================
+// START
+// ============================================================
+init();
+</script>
+</body>
+</html>
