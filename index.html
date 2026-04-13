@@ -164,9 +164,12 @@ header h1 span { color: var(--accent); }
 }
 
 /* Highlight current phrase measures */
-#paper .abcjs-note.abcjs-highlight,
-#paper .abcjs-beam-elem.abcjs-highlight,
-#paper .abcjs-note_selected {
+#paper svg .abcjs-note.abcjs-highlight *,
+#paper svg .abcjs-beam-elem.abcjs-highlight *,
+#paper svg .abcjs-note_selected *,
+#paper svg [style*="e94560"],
+#paper svg .abcjs-note[style] *,
+#paper svg .abcjs-beam-elem[style] * {
   fill: #e94560 !important;
   stroke: #e94560 !important;
 }
@@ -748,6 +751,10 @@ function highlightCurrentPhrase() {
   allNotes.forEach(el => {
     el.style.fill = '';
     el.style.stroke = '';
+    el.querySelectorAll('*').forEach(child => {
+      child.style.fill = '';
+      child.style.stroke = '';
+    });
   });
 
   if (!visualObj || !visualObj[0]) return;
@@ -792,6 +799,11 @@ function highlightCurrentPhrase() {
         if (svgEl) {
           svgEl.style.fill = '#e94560';
           svgEl.style.stroke = '#e94560';
+          // Also set on all child elements
+          svgEl.querySelectorAll('*').forEach(child => {
+            child.style.fill = '#e94560';
+            child.style.stroke = '#e94560';
+          });
         }
       });
     }
