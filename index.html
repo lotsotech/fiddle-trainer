@@ -690,7 +690,7 @@ function extractPhraseNotes(startMeasure, endMeasure) {
   currentPhraseNotes = [];
   if (!visualObj || !visualObj[0]) return;
 
-  // Collect all notes with their measure numbers
+  // Collect ALL notes with their measure numbers
   const allNotes = [];
   const lines = visualObj[0].lines;
   let measureIndex = 0;
@@ -699,7 +699,7 @@ function extractPhraseNotes(startMeasure, endMeasure) {
     if (!line.staff) continue;
     for (const staff of line.staff) {
       if (!staff.voices || !staff.voices[0]) continue;
-      const voice = staff.voices[0]; // first voice only
+      const voice = staff.voices[0];
       for (const elem of voice) {
         if (elem.el_type === 'bar') {
           measureIndex++;
@@ -720,9 +720,25 @@ function extractPhraseNotes(startMeasure, endMeasure) {
   }
 
   // Filter notes in the phrase range
-  currentPhraseNotes = allNotes.filter(n => n.measure >= startMeasure && n.measure < endMeasure);
+  // If first phrase and no notes in measure 0, include measure 1 too
+  let adjustedEnd = endMeasure;
+  if (startMeasure === 0) {
+    const m0notes = allNotes.filter(n => n.measure === 0);
+    if (m0notes.length <= 2 && adjustedEnd <= 1) {
+      adjustedEnd = 2; // include first full measure with pickup
+    }
+  }
+  currentPhraseNotes = allNotes.filter(n => n.measure >= startMeasure && n.measure < adjustedEnd);
 
-  console.log(`Phrase measures ${startMeasure}-${endMeasure}: ${currentPhraseNotes.length} notes`,
+  // If still no notes, try grabbing next chunk
+  if (currentPhraseNotes.length === 0 && allNotes.length > 0) {
+    const maxMeasure = allNotes[allNotes.length - 1].measure;
+    for (let m = startMeasure; m <= maxMeasure && currentPhraseNotes.length === 0; m++) {
+      currentPhraseNotes = allNotes.filter(n => n.measure >= m && n.measure < m + phraseLength);
+    }
+  }
+
+  console.log(`Phrase measures ${startMeasure}-${adjustedEnd}: ${currentPhraseNotes.length} notes`,
     currentPhraseNotes.map(n => n.noteName));
 }
 
