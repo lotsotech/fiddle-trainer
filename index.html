@@ -317,6 +317,7 @@ header h1 span { color: var(--accent); }
   <div class="controls">
     <select id="tuneSelect"></select>
     <div class="key-badge" id="keyBadge">D</div>
+    <a id="sourceLink" href="#" target="_blank" style="color:var(--accent);font-size:0.85rem;text-decoration:underline;">Source</a>
   </div>
 
   <div class="settings">
@@ -383,6 +384,7 @@ const TUNES = [
   {
     name: "Soldier's Joy",
     key: "D",
+    source: "https://tunearch.org/wiki/Annotation:Soldier%27s_Joy_(1)",
     abc: `X:1
 T:Soldier's Joy
 M:C|
@@ -396,6 +398,7 @@ fefg fagf|edcd efge|afdf gece|d2d4:|`
   {
     name: "Sail Away Ladies",
     key: "G",
+    source: "https://tunearch.org/wiki/Annotation:Sail_away_Ladies_(1)",
     abc: `X:1
 T:Sail Away Ladies
 M:C
@@ -408,6 +411,7 @@ B|BABB Bd3|B3A B4|BAGE D2E2|G3B G3:|`
   {
     name: "Old Joe Clark",
     key: "A Mix",
+    source: "https://tunearch.org/wiki/Old_Joe_Clark",
     abc: `X:1
 T:Old Joe Clark
 M:4/4
@@ -421,6 +425,7 @@ A2AB c2dd|efed c2cB|A2Ac B2G2|A4 A2:|`
   {
     name: "Cripple Creek",
     key: "A",
+    source: "https://tunearch.org/wiki/Cripple_Creek",
     abc: `X:1
 T:Cripple Creek
 M:C|
@@ -434,6 +439,7 @@ a2a2eced|d2d2 e2AB|c2Ac BEFA|E2FA A2:|`
   {
     name: "Angeline the Baker",
     key: "D",
+    source: "https://tunearch.org/wiki/Angeline_the_Baker",
     abc: `X:1
 T:Angeline the Baker
 M:2/4
@@ -587,6 +593,13 @@ function loadTune() {
   stopRecording();
   const tune = TUNES[currentTuneIndex];
   keyBadge.textContent = tune.key;
+  const sourceLink = document.getElementById('sourceLink');
+  if (tune.source) {
+    sourceLink.href = tune.source;
+    sourceLink.style.display = 'inline';
+  } else {
+    sourceLink.style.display = 'none';
+  }
 
   // Render the full tune as sheet music
   visualObj = ABCJS.renderAbc("paper", tune.abc, {
