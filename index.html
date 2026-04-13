@@ -658,7 +658,7 @@ function loadTune() {
       if (abcElem && abcElem.pitches && abcElem.pitches.length > 0 && violinPreset && audioCtx) {
         ensureAudioCtx().then(() => {
           for (const p of abcElem.pitches) {
-            const midi = abcjsPitchToMidi(p.pitch);
+            const midi = abcjsPitchToMidi(p);
             if (midi > 0) {
               player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, audioCtx.currentTime, midi, 0.5, 1.0);
             }
@@ -786,7 +786,7 @@ function extractPhraseNotes(startMeasure, endMeasure) {
         }
         if (elem.el_type === 'note' && elem.pitches) {
           for (const p of elem.pitches) {
-            const midi = abcjsPitchToMidi(p.pitch);
+            const midi = abcjsPitchToMidi(p);
             const noteName = midiToNoteName(midi);
             const duration = elem.duration || 0.125;
             if (midi > 0) {
@@ -821,17 +821,59 @@ function extractPhraseNotes(startMeasure, endMeasure) {
     currentPhraseNotes.map(n => n.noteName));
 }
 
-function abcjsPitchToMidi(pitch) {
-  // ABCJS uses a diatonic pitch system:
-  // pitch 0 = C4 (middle C), 1 = D4, 2 = E4, 3 = F4, 4 = G4, 5 = A4, 6 = B4
-  // pitch 7 = C5, etc.
-  // Negative: -1 = B3, -2 = A3, etc.
+function abcjsPitchToMidi(pitchObj) {
+  // If ABCJS provides midipitch, use it (already accounts for key signature)
+  if (typeof pitchObj === 'object' && pitchObj.midipitch !== undefined) {
+    return pitchObj.midipitch;
+  }
+
+  // Fallback: convert diatonic pitch + key signature
+  const pitch = (typeof pitchObj === 'object') ? pitchObj.pitch : pitchObj;
   const scaleToSemitone = [0, 2, 4, 5, 7, 9, 11]; // C D E F G A B
   const octave = Math.floor(pitch / 7);
-  let degree = pitch % 7;
-  if (degree < 0) { degree += 7; }
-  const baseMidi = 60; // C4
-  return baseMidi + octave * 12 + scaleToSemitone[degree];
+  let degree = ((pitch % 7) + 7) % 7;
+  let midi = 60 + octave * 12 + scaleToSemitone[degree];
+
+  // Apply accidentals from the pitch object
+  if (typeof pitchObj === 'object' && pitchObj.accidental) {
+    switch (pitchObj.accidental) {
+      case 'sharp': midi += 1; break;
+      case 'flat': midi -= 1; break;
+      case 'natural': break; // already natural
+      case 'dblsharp': midi += 2; break;
+      case 'dblflat': midi -= 2; break;
+    }
+  } else {
+    // Apply key signature sharps/flats
+    const tune = TUNES[currentTuneIndex];
+    const keySig = getKeySignature(tune.key);
+    // degree: 0=C, 1=D, 2=E, 3=F, 4=G, 5=A, 6=B
+    const noteNames = ['C','D','E','F','G','A','B'];
+    if (keySig.sharps.includes(noteNames[degree])) midi += 1;
+    if (keySig.flats.includes(noteNames[degree])) midi -= 1;
+  }
+
+  return midi;
+}
+
+function getKeySignature(key) {
+  const keyMap = {
+    'C':     { sharps: [], flats: [] },
+    'G':     { sharps: ['F'], flats: [] },
+    'D':     { sharps: ['F','C'], flats: [] },
+    'A':     { sharps: ['F','C','G'], flats: [] },
+    'A Mix': { sharps: ['F','C'], flats: [] }, // A Mixolydian = 2 sharps (like D major)
+    'E':     { sharps: ['F','C','G','D'], flats: [] },
+    'B':     { sharps: ['F','C','G','D','A'], flats: [] },
+    'F':     { sharps: [], flats: ['B'] },
+    'Bb':    { sharps: [], flats: ['B','E'] },
+    'Eb':    { sharps: [], flats: ['B','E','A'] },
+    'Dm':    { sharps: [], flats: ['B'] },
+    'Am':    { sharps: [], flats: [] },
+    'Em':    { sharps: ['F'], flats: [] },
+    'Bm':    { sharps: ['F','C'], flats: [] },
+  };
+  return keyMap[key] || keyMap['C'];
 }
 
 // ============================================================
@@ -935,7 +977,7 @@ async function previewFullTune() {
         if (elem.el_type === 'bar') { measureIndex++; continue; }
         if (elem.el_type === 'note' && elem.pitches) {
           for (const p of elem.pitches) {
-            const midi = abcjsPitchToMidi(p.pitch);
+            const midi = abcjsPitchToMidi(p);
             const duration = elem.duration || 0.125;
             if (midi > 0) allNotes.push({ midi, duration });
           }
