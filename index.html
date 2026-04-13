@@ -573,7 +573,7 @@ function init() {
   setStatus('Select a tune and press Play to begin.');
 }
 
-function ensureAudioCtx() {
+async function ensureAudioCtx() {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     player = new WebAudioFontPlayer();
@@ -584,7 +584,7 @@ function ensureAudioCtx() {
     console.log('Violin preset loaded, zones:', violinPreset.zones?.length);
   }
   if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
+    await audioCtx.resume();
   }
   return audioCtx;
 }
@@ -784,7 +784,7 @@ function abcjsPitchToMidi(pitch) {
 // ============================================================
 async function playPhrase() {
   if (isPlaying || isRecording) return;
-  ensureAudioCtx();
+  await ensureAudioCtx();
 
   if (!violinPreset) {
     setStatus('Violin sound not loaded yet. Click and try again.');
@@ -839,7 +839,7 @@ async function playPhrase() {
 
 async function previewFullTune() {
   if (isPlaying || isRecording) return;
-  ensureAudioCtx();
+  await ensureAudioCtx();
 
   if (!violinPreset) {
     setStatus('Violin sound not loaded yet. Click and try again.');
@@ -1004,7 +1004,7 @@ function autoCorrelate(buf, sampleRate) {
 // ============================================================
 async function startMic() {
   if (micStream) return;
-  ensureAudioCtx();
+  await ensureAudioCtx();
   try {
     micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     micSource = audioCtx.createMediaStreamSource(micStream);
