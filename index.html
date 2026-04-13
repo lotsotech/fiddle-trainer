@@ -7,6 +7,11 @@
 <script src="abcjs-basic-min.js"></script>
 <script src="WebAudioFontPlayer.js"></script>
 <script src="violin_preset.js"></script>
+<script src="violin_FluidR3.js"></script>
+<script src="violin_Aspirin.js"></script>
+<script src="violin_GeneralUser.js"></script>
+<script src="violin_SBLive.js"></script>
+<script src="violin_Tone000.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -317,6 +322,14 @@ header h1 span { color: var(--accent); }
   <div class="controls">
     <select id="tuneSelect"></select>
     <div class="key-badge" id="keyBadge">D</div>
+    <select id="violinSelect" style="background:var(--bg3);color:var(--text);border:none;border-radius:6px;padding:6px 10px;font-size:0.85rem;">
+      <option value="JCLive">JCLive Violin</option>
+      <option value="FluidR3">FluidR3 Violin</option>
+      <option value="Aspirin">Aspirin Violin</option>
+      <option value="GeneralUser">GeneralUser Violin</option>
+      <option value="SBLive">SBLive Violin</option>
+      <option value="Tone000">Tone000 Violin</option>
+    </select>
     <a id="sourceLink" href="#" target="_blank" style="color:var(--accent);font-size:0.85rem;text-decoration:underline;">Source</a>
   </div>
 
@@ -556,6 +569,13 @@ function init() {
     loadTune();
   });
 
+  document.getElementById('violinSelect').addEventListener('change', (e) => {
+    ensureAudioCtx().then(() => {
+      loadViolin(e.target.value);
+      setStatus(`Switched to ${e.target.value} violin.`);
+    });
+  });
+
   document.getElementById('btnPreview').addEventListener('click', () => {
     if (isPlaying) { stopPreview(); } else { previewFullTune(); }
   });
@@ -575,15 +595,35 @@ function init() {
   setStatus('Select a tune and press Play to begin.');
 }
 
+const VIOLIN_PRESETS = {
+  JCLive: () => typeof _tone_0400_JCLive_sf2_file !== 'undefined' ? _tone_0400_JCLive_sf2_file : null,
+  FluidR3: () => typeof _tone_0400_FluidR3_GM_sf2_file !== 'undefined' ? _tone_0400_FluidR3_GM_sf2_file : null,
+  Aspirin: () => typeof _tone_0400_Aspirin_sf2_file !== 'undefined' ? _tone_0400_Aspirin_sf2_file : null,
+  GeneralUser: () => typeof _tone_0400_GeneralUserGS_sf2_file !== 'undefined' ? _tone_0400_GeneralUserGS_sf2_file : null,
+  SBLive: () => typeof _tone_0400_SBLive_sf2 !== 'undefined' ? _tone_0400_SBLive_sf2 : null,
+  Tone000: () => typeof _tone_0400_Tone_000_sf2_file !== 'undefined' ? _tone_0400_Tone_000_sf2_file : null,
+};
+let currentViolinName = 'JCLive';
+
+function loadViolin(name) {
+  const getter = VIOLIN_PRESETS[name];
+  if (!getter) return;
+  const preset = getter();
+  if (preset && player && audioCtx) {
+    violinPreset = preset;
+    player.adjustPreset(audioCtx, violinPreset);
+    currentViolinName = name;
+    console.log(`Switched to ${name} violin, zones: ${violinPreset.zones?.length}`);
+  }
+}
+
 async function ensureAudioCtx() {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     player = new WebAudioFontPlayer();
   }
-  if (!violinPreset && typeof _tone_0400_JCLive_sf2_file !== 'undefined') {
-    violinPreset = _tone_0400_JCLive_sf2_file;
-    player.adjustPreset(audioCtx, violinPreset);
-    console.log('Violin preset loaded, zones:', violinPreset.zones?.length);
+  if (!violinPreset) {
+    loadViolin(currentViolinName);
   }
   if (audioCtx.state === 'suspended') {
     await audioCtx.resume();
