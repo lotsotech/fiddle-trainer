@@ -786,12 +786,13 @@ async function playPhrase() {
   setStatus('Playing phrase...');
 
   try {
-    const beatDuration = 60 / tempo; // duration of one eighth note at current tempo
+    const quarterNoteDur = 60 / tempo; // seconds per quarter note (beat)
+    const wholeNoteDur = quarterNoteDur * 4; // seconds per whole note
     let time = audioCtx.currentTime + 0.1;
 
     currentPhraseNotes.forEach((n, i) => {
-      // duration is in ABC units (1 = whole note, 0.5 = half, 0.125 = eighth)
-      const dur = n.duration * 4 * beatDuration; // convert to seconds
+      // ABCJS duration: 1.0 = whole note, 0.5 = half, 0.25 = quarter, 0.125 = eighth
+      const dur = n.duration * wholeNoteDur;
       const noteOnDelay = (time - audioCtx.currentTime) * 1000;
 
       // Highlight note cell during playback
