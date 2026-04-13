@@ -352,7 +352,8 @@ header h1 span { color: var(--accent); }
   <div class="pitch-monitor" id="pitchMonitor"></div>
 
   <div class="actions">
-    <button class="btn btn-play" id="btnPlay" disabled>&#9654; Play</button>
+    <button class="btn" id="btnPreview" style="background:#2a6e4e;">&#9654; Preview Full Tune</button>
+    <button class="btn btn-play" id="btnPlay" disabled>&#9654; Play Phrase</button>
     <button class="btn btn-record" id="btnRecord" disabled>&#9679; Record</button>
     <button class="btn btn-next" id="btnNext" disabled>Next &#9654;</button>
     <button class="btn" id="btnRestart" style="background:#555;">&#8634; Start Over</button>
@@ -555,6 +556,7 @@ function init() {
     loadTune();
   });
 
+  document.getElementById('btnPreview').addEventListener('click', () => previewFullTune());
   btnPlay.addEventListener('click', () => playPhrase());
   btnRecord.addEventListener('click', toggleRecord);
   btnNext.addEventListener('click', nextPhrase);
@@ -833,6 +835,77 @@ async function playPhrase() {
   btnPlay.disabled = false;
   btnRecord.disabled = false;
   setStatus('Your turn! Press Record and play the phrase on your fiddle.');
+}
+
+async function previewFullTune() {
+  if (isPlaying || isRecording) return;
+  ensureAudioCtx();
+
+  if (!violinPreset) {
+    setStatus('Violin sound not loaded yet. Click and try again.');
+    return;
+  }
+
+  if (!visualObj || !visualObj[0]) {
+    setStatus('No tune loaded.');
+    return;
+  }
+
+  // Extract ALL notes from the tune
+  const allNotes = [];
+  const lines = visualObj[0].lines;
+  let measureIndex = 0;
+
+  for (const line of lines) {
+    if (!line.staff) continue;
+    for (const staff of line.staff) {
+      if (!staff.voices || !staff.voices[0]) continue;
+      const voice = staff.voices[0];
+      for (const elem of voice) {
+        if (elem.el_type === 'bar') { measureIndex++; continue; }
+        if (elem.el_type === 'note' && elem.pitches) {
+          for (const p of elem.pitches) {
+            const midi = abcjsPitchToMidi(p.pitch);
+            const duration = elem.duration || 0.125;
+            if (midi > 0) allNotes.push({ midi, duration });
+          }
+        }
+      }
+    }
+  }
+
+  if (allNotes.length === 0) {
+    setStatus('No notes found in tune.');
+    return;
+  }
+
+  isPlaying = true;
+  const btnPreview = document.getElementById('btnPreview');
+  btnPreview.disabled = true;
+  btnPreview.textContent = '⏹ Playing...';
+  btnPlay.disabled = true;
+  btnRecord.disabled = true;
+  setStatus(`Playing full tune (${allNotes.length} notes)...`);
+
+  const quarterNoteDur = 60 / tempo;
+  const wholeNoteDur = quarterNoteDur * 4;
+  let time = audioCtx.currentTime + 0.1;
+
+  allNotes.forEach(n => {
+    const dur = n.duration * wholeNoteDur;
+    player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, time, n.midi, dur * 0.9, 1.0);
+    time += dur;
+  });
+
+  const totalDur = (time - audioCtx.currentTime) * 1000;
+  await new Promise(resolve => setTimeout(resolve, totalDur + 200));
+
+  isPlaying = false;
+  btnPreview.disabled = false;
+  btnPreview.textContent = '▶ Preview Full Tune';
+  btnPlay.disabled = false;
+  btnRecord.disabled = false;
+  setStatus('Preview done! Press Play to practice a phrase.');
 }
 
 function buildPhraseAbc() {
