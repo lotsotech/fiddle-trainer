@@ -556,7 +556,9 @@ function init() {
     loadTune();
   });
 
-  document.getElementById('btnPreview').addEventListener('click', () => previewFullTune());
+  document.getElementById('btnPreview').addEventListener('click', () => {
+    if (isPlaying) { stopPreview(); } else { previewFullTune(); }
+  });
   btnPlay.addEventListener('click', () => playPhrase());
   btnRecord.addEventListener('click', toggleRecord);
   btnNext.addEventListener('click', nextPhrase);
@@ -837,8 +839,24 @@ async function playPhrase() {
   setStatus('Your turn! Press Record and play the phrase on your fiddle.');
 }
 
+let previewResolve = null;
+
+function stopPreview() {
+  if (player && audioCtx) {
+    player.cancelQueue(audioCtx);
+  }
+  isPlaying = false;
+  const btnPreview = document.getElementById('btnPreview');
+  btnPreview.textContent = '▶ Preview Full Tune';
+  btnPreview.style.background = '#2a6e4e';
+  btnPlay.disabled = false;
+  btnRecord.disabled = false;
+  if (previewResolve) { previewResolve(); previewResolve = null; }
+  setStatus('Preview stopped. Press Play to practice a phrase.');
+}
+
 async function previewFullTune() {
-  if (isPlaying || isRecording) return;
+  if (isRecording) return;
   await ensureAudioCtx();
 
   if (!violinPreset) {
@@ -851,7 +869,6 @@ async function previewFullTune() {
     return;
   }
 
-  // Extract ALL notes from the tune
   const allNotes = [];
   const lines = visualObj[0].lines;
   let measureIndex = 0;
@@ -881,8 +898,8 @@ async function previewFullTune() {
 
   isPlaying = true;
   const btnPreview = document.getElementById('btnPreview');
-  btnPreview.disabled = true;
-  btnPreview.textContent = '⏹ Playing...';
+  btnPreview.textContent = '⏹ Stop';
+  btnPreview.style.background = '#c62828';
   btnPlay.disabled = true;
   btnRecord.disabled = true;
   setStatus(`Playing full tune (${allNotes.length} notes)...`);
@@ -898,14 +915,20 @@ async function previewFullTune() {
   });
 
   const totalDur = (time - audioCtx.currentTime) * 1000;
-  await new Promise(resolve => setTimeout(resolve, totalDur + 200));
+  await new Promise(resolve => {
+    previewResolve = resolve;
+    setTimeout(resolve, totalDur + 200);
+  });
 
-  isPlaying = false;
-  btnPreview.disabled = false;
-  btnPreview.textContent = '▶ Preview Full Tune';
-  btnPlay.disabled = false;
-  btnRecord.disabled = false;
-  setStatus('Preview done! Press Play to practice a phrase.');
+  if (isPlaying) {
+    isPlaying = false;
+    btnPreview.textContent = '▶ Preview Full Tune';
+    btnPreview.style.background = '#2a6e4e';
+    btnPlay.disabled = false;
+    btnRecord.disabled = false;
+    setStatus('Preview done! Press Play to practice a phrase.');
+  }
+  previewResolve = null;
 }
 
 function buildPhraseAbc() {
