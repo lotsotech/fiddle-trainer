@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.13</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.14</div>
 </header>
 
 <div class="container">
@@ -1443,10 +1443,8 @@ async function previewFullTune() {
       responsive: 'resize', add_classes: true
     });
 
-    // Use SynthController for synced playback + highlighting
-    if (!synthController) {
-      synthController = new ABCJS.synth.SynthController();
-    }
+    // Fresh SynthController each time for correct tempo
+    synthController = new ABCJS.synth.SynthController();
     synthController.load('#synthControl', cursorControl, {
       displayLoop: false, displayRestart: false,
       displayPlay: false, displayProgress: false, displayWarp: false
@@ -1455,11 +1453,11 @@ async function previewFullTune() {
     await synthController.setTune(previewVisualObj[0], false, {
       program: 40,
       soundFontVolumeMultiplier: 1.5,
-      chordsOff: true
+      chordsOff: true,
+      millisecondsPerMeasure: getMillisecondsPerMeasure(),
+      qpm: tempo
     });
 
-    // Map offscreen elements to onscreen elements for highlighting
-    // SynthController handles repeat sync internally
     synthController.play();
     document.body.removeChild(offDiv);
 
