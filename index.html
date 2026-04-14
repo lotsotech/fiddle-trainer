@@ -474,7 +474,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.53</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.54</div>
 </header>
 
 <div class="container">
@@ -1363,7 +1363,8 @@ async function previewFullTune() {
       visualObj: visualObj[0],
       options: {
         program: 40, // violin
-        soundFontVolumeMultiplier: 1.5
+        soundFontVolumeMultiplier: 1.5,
+        chordsOff: true // disable chord accompaniment
       },
       millisecondsPerMeasure: (60 / tempo) * 4 * 1000
     });
