@@ -464,7 +464,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.51</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.52</div>
 </header>
 
 <div class="container">
@@ -1433,9 +1433,11 @@ function buildPlaybackSequence() {
         continue;
       } else {
         // Check if there are more endings that need additional passes
-        // Look ahead from repeatStartIndex to find max ending number
+        // Scan from repeat start to a few measures PAST the right repeat
+        // to find endings like |3 that come after :|
         let maxEnding = 2; // default: repeats play twice
-        for (let j = repeatStartIndex; j <= i; j++) {
+        const scanEnd = Math.min(i + 5, measures.length);
+        for (let j = repeatStartIndex; j < scanEnd; j++) {
           if (measures[j].ending) {
             const nums = measures[j].ending.replace(/\s/g, '').split(',').map(Number);
             for (const n of nums) {
