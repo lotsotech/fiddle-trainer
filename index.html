@@ -1269,10 +1269,14 @@ async function previewFullTune() {
       for (const elem of voice) {
         if (elem.el_type === 'bar') { measureIndex++; continue; }
         if (elem.el_type === 'note' && elem.pitches) {
+          const midis = [];
           for (const p of elem.pitches) {
             const midi = abcjsPitchToMidi(p);
+            if (midi > 0) midis.push(midi);
+          }
+          if (midis.length > 0) {
             const duration = elem.duration || 0.125;
-            if (midi > 0) allNotes.push({ midi, duration });
+            allNotes.push({ midis, duration });
           }
         }
       }
@@ -1298,7 +1302,9 @@ async function previewFullTune() {
 
   allNotes.forEach(n => {
     const dur = n.duration * wholeNoteDur;
-    player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, time, n.midi, dur * 0.9, 1.0);
+    for (const m of n.midis) {
+      player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, time, m, dur * 0.9, 1.0);
+    }
     time += dur;
   });
 
