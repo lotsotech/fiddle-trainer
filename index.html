@@ -1063,13 +1063,25 @@ function extractPhraseNotes(startMeasure, endMeasure) {
           continue;
         }
         if (elem.el_type === 'note' && elem.pitches) {
+          const midis = [];
+          const names = [];
           for (const p of elem.pitches) {
             const midi = abcjsPitchToMidi(p);
-            const noteName = midiToNoteName(midi);
-            const duration = elem.duration || 0.125;
             if (midi > 0) {
-              allNotes.push({ midi, noteName, duration, measure: measureIndex, abselem: elem.abselem });
+              midis.push(midi);
+              names.push(midiToNoteName(midi));
             }
+          }
+          if (midis.length > 0) {
+            const duration = elem.duration || 0.125;
+            allNotes.push({
+              midi: midis[0],
+              midis: midis,
+              noteName: names.join('+'),
+              duration: duration,
+              measure: measureIndex,
+              abselem: elem.abselem
+            });
           }
         }
       }
@@ -1193,7 +1205,10 @@ async function playPhrase() {
         if (cell) cell.classList.add('active');
       }, noteOnDelay);
 
-      player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, time, n.midi, dur * 0.9, 1.0);
+      const noteMidis = n.midis || [n.midi];
+      for (const m of noteMidis) {
+        player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, time, m, dur * 0.9, 1.0);
+      }
       time += dur;
     });
 
