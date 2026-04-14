@@ -3,37 +3,43 @@
     "name": "Cornstalk Fiddle and a Shoestring Bow",
     "key": "G",
     "source": "https://tunearch.org/wiki/Cornstalk_Fiddle",
-    "abc": "X:1\nT:Cornstalk Fiddle and a Shoestring Bow\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\ne2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2z2|\ne2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2||\nD2G2 BGBG|A2G2 B3G|D2G2 BdBG|A2G2G2z2|\nD2G2 BGBG|A2G2 B2d2|e2d2 BdBG|A2G2G2||"
+    "abc": "X:1\nT:Cornstalk Fiddle and a Shoestring Bow\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\ne2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2z2|\ne2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2||\nD2G2 BGBG|A2G2 B3G|D2G2 BdBG|A2G2G2z2|\nD2G2 BGBG|A2G2 B2d2|e2d2 BdBG|A2G2G2||",
+    "editable": true
   },
   {
     "name": "Sail Away Ladies",
     "key": "G",
     "source": "https://thesession.org/tunes/11080",
-    "abc": "X:1\nT:Sail Away Ladies\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:B2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2|\nB2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2:|\n|:g2g2 ged2|e3f e3g|g2g2 edB2|d3e d2e2|\ne2ed BAGA|A3G G3B|BAGE D2E2|G3A G2G2:|"
+    "abc": "X:1\nT:Sail Away Ladies\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:B2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2|\nB2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2:|\n|:g2g2 ged2|e3f e3g|g2g2 edB2|d3e d2e2|\ne2ed BAGA|A3G G3B|BAGE D2E2|G3A G2G2:|",
+    "editable": true
   },
   {
     "name": "Angeline the Baker",
     "key": "D",
     "source": "https://thesession.org/tunes/14300",
-    "abc": "X:1\nT:Angeline the Baker\nM:2/4\nL:1/8\nK:D\n%%MIDI program 40\n|:d/B/|AB d>A|Bd2 d/B/|AB d/B/A|\nB3 d/B/|AB d>e|fe d>e|fe dB|A>B A:|\n|:f/g/|af ed/e/|fe df/g/|af ed|B>B Bf/g/|\naf ed/e/|fe dd/e/|fe dB|A>B A:|"
+    "abc": "X:1\nT:Angeline the Baker\nM:2/4\nL:1/8\nK:D\n%%MIDI program 40\n|:d/B/|AB d>A|Bd2 d/B/|AB d/B/A|\nB3 d/B/|AB d>e|fe d>e|fe dB|A>B A:|\n|:f/g/|af ed/e/|fe df/g/|af ed|B>B Bf/g/|\naf ed/e/|fe dd/e/|fe dB|A>B A:|",
+    "editable": true
   },
   {
     "name": "Soldier's Joy",
     "key": "D",
     "source": "https://thesession.org/tunes/1356#setting24087",
-    "abc": "X:1\nT:Soldier's Joy\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:FG|AFDF AFDF|A2d2 d2cB|AFDF AFDF|G2E2 E2FG|\nAFDF AFDF|A2d2 d2de|fafd egec|d2f2d2:|\n|:de|fdAd fagf|edcd efge|fdAd fgaf|edcB A2de|\nfdAd fagf|edcd efge|fafd egec|d2f2 d2:|"
+    "abc": "X:1\nT:Soldier's Joy\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:FG|AFDF AFDF|A2d2 d2cB|AFDF AFDF|G2E2 E2FG|\nAFDF AFDF|A2d2 d2de|fafd egec|d2f2d2:|\n|:de|fdAd fagf|edcd efge|fdAd fgaf|edcB A2de|\nfdAd fagf|edcd efge|fafd egec|d2f2 d2:|",
+    "editable": true
   },
   {
     "name": "Cripple Creek",
     "key": "A",
     "source": "https://thesession.org/tunes/23886",
-    "abc": "X:1\nT:Cripple Creek\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\ne|gaaa fecA|defd e2ee|Bce2 cBAF|EFAB A2ee|\nga2b afec|defd e2ee|Bcef ecBA|EFAB A3A||\n|:Bccc BAFA|BcBA F2A2|Bcec BAFD|EFAB A2AA|\nBccc Bccc|BcBA F2A2|Bcef ecBA|EFAB A4:|"
+    "abc": "X:1\nT:Cripple Creek\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\ne|gaaa fecA|defd e2ee|Bce2 cBAF|EFAB A2ee|\nga2b afec|defd e2ee|Bcef ecBA|EFAB A3A||\n|:Bccc BAFA|BcBA F2A2|Bcec BAFD|EFAB A2AA|\nBccc Bccc|BcBA F2A2|Bcef ecBA|EFAB A4:|",
+    "editable": true
   },
   {
     "name": "Old Joe Clark",
     "key": "A Mix",
     "source": "https://thesession.org/tunes/14474",
-    "abc": "X:1\nT:Old Joe Clark\nM:4/4\nL:1/8\nK:AMix\n%%MIDI program 40\n|:A2|e3f g2f2|e2d2 c2d2|e3f g2f2|e6 A2|\ne3f g2f2|e2d2 c2B2|A2c2 B2G2|A6:|\n|:E2|A3A A2A2|e2d2 c4|A3A c2A2|B8|\nA3A A2A2|e2d2 c2B2|A2c2 B2G2|A6:|"
+    "abc": "X:1\nT:Old Joe Clark\nM:4/4\nL:1/8\nK:AMix\n%%MIDI program 40\n|:A2|e3f g2f2|e2d2 c2d2|e3f g2f2|e6 A2|\ne3f g2f2|e2d2 c2B2|A2c2 B2G2|A6:|\n|:E2|A3A A2A2|e2d2 c4|A3A c2A2|B8|\nA3A A2A2|e2d2 c2B2|A2c2 B2G2|A6:|",
+    "editable": true
   },
   {
     "name": "Ballinara Ora",
