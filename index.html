@@ -1386,23 +1386,21 @@ function buildPlaybackSequence() {
     const measure = measures[i];
 
     // Handle bar_left_repeat: marks the start of a repeated section
-    if (bar.type === 'bar_left_repeat') {
+    // Only reset if we're not currently in the middle of a repeat pass
+    if (bar.type === 'bar_left_repeat' && repeatPass === 0) {
       repeatStartIndex = i;
-      repeatPass = 0;
     }
 
     // Handle bar_left_right_repeat (:|:): end of one repeat section, start of next
-    // This acts as right-repeat THEN left-repeat
     if (bar.type === 'bar_left_right_repeat') {
       if (repeatPass === 0) {
-        // First time reaching :|: -- treat as right repeat: jump back
         repeatPass = 1;
         i = repeatStartIndex;
         continue;
       } else {
-        // We've completed the repeat. Now this becomes the start of the next section.
-        repeatStartIndex = i;
+        // Done with this repeat. Start new section.
         repeatPass = 0;
+        repeatStartIndex = i;
       }
     }
 
