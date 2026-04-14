@@ -1321,12 +1321,7 @@ function buildPlaybackSequence() {
       const voice = staff.voices[0];
       for (const elem of voice) {
         if (elem.el_type === 'bar') {
-          // Track ending state changes
-          if (elem.startEnding) {
-            currentEnding = elem.startEnding;
-          }
-
-          // Finalize current measure
+          // Finalize current measure with whatever ending was active
           currentMeasure.ending = currentEnding;
           measures.push(currentMeasure);
           barInfos.push({
@@ -1335,8 +1330,14 @@ function buildPlaybackSequence() {
             endEnding: elem.endEnding || null
           });
 
+          // Update ending state AFTER saving the measure
+          // endEnding clears the ending
           if (elem.endEnding) {
             currentEnding = null;
+          }
+          // startEnding sets new ending for NEXT measure
+          if (elem.startEnding) {
+            currentEnding = elem.startEnding;
           }
 
           currentMeasure = { notes: [], ending: currentEnding };
