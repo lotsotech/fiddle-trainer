@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.3</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.4</div>
 </header>
 
 <div class="container">
@@ -517,7 +517,6 @@ header h1 span { color: var(--accent); }
     <button class="btn" id="btnPreview" style="background:#2a6e4e;">&#9654; Preview Full Tune</button>
     <button class="btn btn-play" id="btnPlay" disabled>&#9654; Play Phrase</button>
     <button class="btn btn-record" id="btnRecord" disabled>&#9679; Record</button>
-    <button id="btnCountdownToggle" onclick="toggleCountdown()" style="background:var(--accent2);color:#fff;font-size:0.8rem;padding:6px 12px;border:none;border-radius:6px;cursor:pointer;white-space:nowrap;" title="Toggle countdown before recording">3-2-1: ON</button>
     <button class="btn btn-next" id="btnNext" disabled>Next &#9654;</button>
     <button class="btn" id="btnRestart" style="background:#555;">&#8634; Start Over</button>
   </div>
@@ -820,7 +819,7 @@ let animFrameId = null;
 let currentPhraseNotes = [];
 
 // Countdown toggle for recording
-let countdownEnabled = true;
+let countdownEnabled = false;
 
 // ============================================================
 // DOM REFS
