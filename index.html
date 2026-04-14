@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.58.1</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59</div>
 </header>
 
 <div class="container">
@@ -1005,7 +1005,7 @@ function loadTune() {
           clickSynth.init({
             audioContext: audioCtx,
             visualObj: clickVisual[0],
-            options: { program: 40, soundFontVolumeMultiplier: 1.5, chordsOff: true }
+            options: { program: 40, soundFontUrl: "soundfonts/custom-violin/", soundFontVolumeMultiplier: 1.5, chordsOff: true }
           }).then(() => clickSynth.prime()).then(() => clickSynth.start());
         });
       }
@@ -1294,6 +1294,7 @@ async function playPhrase() {
       visualObj: phraseVisual[0],
       options: {
         program: 40,
+        soundFontUrl: "soundfonts/custom-violin/",
         soundFontVolumeMultiplier: 1.5,
         chordsOff: true
       },
@@ -1623,6 +1624,7 @@ async function previewFullTune() {
       millisecondsPerMeasure: getMillisecondsPerMeasure(),
       options: {
         program: 40,
+        soundFontUrl: "soundfonts/custom-violin/",
         soundFontVolumeMultiplier: 1.5,
         chordsOff: true
       }
