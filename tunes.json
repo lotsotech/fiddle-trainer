@@ -529,5 +529,12 @@
     "abc": "X:1\nT:Waterbound\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
     "editable": true,
     "needsAbc": true
+  },
+  {
+    "name": "Whiteface",
+    "key": "Em",
+    "source": "https://tunearch.org/wiki/Whiteface",
+    "abc": "X:1\nT:Whiteface\nZ:trans. Mark Wardenburg, September 2025\nL:1/8\nM:none\nI:linebreak $\nK:G\n%%MIDI program 40\n|[M:4/4] |:\"Em\" (d e2) f gfgf | efed BAGD |$ !^!ABAG EDEG |1 ([EB]3 G) EGBA :|2 ([EB]3 G) EGED |:$\n[G,G]3 [G,G] [G,G]2 [DB]2- | [DB]2 AB AGED | E3 [EB]- [EB]DEG |1$ [EB]3 G EGED :|2 E3 D EGED |:$\n\"C\" [CE]3 [CE] [CE]2 DD | EDEG AGED |\"Em\" [B,E]3 [B,E] [B,E]2 [B,D][B,E]- |1,2$\n.[B,E][B,D][B,E]G [B,E]2 [G,D][G,D] :|3 [B,E][B,D][B,E][B,G] !fermata![B,E]GED |]",
+    "editable": true
   }
 ]
