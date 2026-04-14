@@ -5,13 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fiddle Ear Trainer</title>
 <script src="abcjs-basic-min.js"></script>
-<script src="WebAudioFontPlayer.js"></script>
-<script src="violin_preset.js"></script>
-<script src="violin_FluidR3.js"></script>
-<script src="violin_Aspirin.js"></script>
-<script src="violin_GeneralUser.js"></script>
-<script src="violin_SBLive.js"></script>
-<script src="violin_Tone000.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -474,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.54</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.55</div>
 </header>
 
 <div class="container">
@@ -484,15 +477,6 @@ header h1 span { color: var(--accent); }
     <button class="btn-delete-tune" id="btnEditTune" style="display:none;" onclick="editCustomTune()">Edit</button>
     <button class="btn-delete-tune" id="btnDeleteTune" style="display:none;" onclick="deleteCustomTune()">Delete</button>
     <div class="key-badge" id="keyBadge">D</div>
-    <select id="violinSelect" style="background:var(--bg3);color:var(--text);border:none;border-radius:6px;padding:6px 10px;font-size:0.85rem;">
-      <option value="JCLive">JCLive Violin</option>
-<!-- GeneralUser is default, set selected below -->
-      <option value="FluidR3">FluidR3 Violin</option>
-      <option value="Aspirin">Aspirin Violin</option>
-      <option value="GeneralUser" selected>GeneralUser Violin</option>
-      <option value="SBLive">SBLive Violin</option>
-      <option value="Tone000">Tone000 Violin</option>
-    </select>
     <a id="sourceLink" href="#" target="_blank" style="color:var(--accent);font-size:0.85rem;text-decoration:underline;">Source</a>
   </div>
 
@@ -514,6 +498,7 @@ header h1 span { color: var(--accent); }
   <div id="sheet-music-wrap" style="display:none;">
     <div id="paper"></div>
   </div>
+  <div id="synthControl" style="display:none;"></div>
   <div id="sheetToggle" style="text-align:center;cursor:pointer;padding:6px;background:var(--bg3);border-radius:6px;margin:4px 0;font-size:0.85rem;color:var(--text-dim);user-select:none;" onclick="toggleSheet()">▼ Show Sheet Music</div>
 
   <div class="progress-bar">
@@ -568,6 +553,9 @@ T:Soldier's Joy
 M:4/4
 L:1/8
 K:D
+%%MIDI program 40
+%%MIDI chordprog 0
+%%MIDI bassprog 0
 |:FG|AFDF AFDF|A2d2 d2cB|AFDF AFDF|G2E2 E2FG|
 AFDF AFDF|A2d2 d2de|fafd egec|d2f2d2:|
 |:de|fdAd fagf|edcd efge|fdAd fgaf|edcB A2de|
@@ -582,6 +570,9 @@ T:Sail Away Ladies
 M:4/4
 L:1/8
 K:G
+%%MIDI program 40
+%%MIDI chordprog 0
+%%MIDI bassprog 0
 |:B2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2|
 B2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2:|
 |:g2g2 ged2|e3f e3g|g2g2 edB2|d3e d2e2|
@@ -596,6 +587,9 @@ T:Old Joe Clark
 M:4/4
 L:1/8
 K:AMix
+%%MIDI program 40
+%%MIDI chordprog 0
+%%MIDI bassprog 0
 |:A2|e3f g2f2|e2d2 c2d2|e3f g2f2|e6 A2|
 e3f g2f2|e2d2 c2B2|A2c2 B2G2|A6:|
 |:E2|A3A A2A2|e2d2 c4|A3A c2A2|B8|
@@ -610,6 +604,9 @@ T:Cripple Creek
 M:4/4
 L:1/8
 K:A
+%%MIDI program 40
+%%MIDI chordprog 0
+%%MIDI bassprog 0
 e|gaaa fecA|defd e2ee|Bce2 cBAF|EFAB A2ee|
 ga2b afec|defd e2ee|Bcef ecBA|EFAB A3A||
 |:Bccc BAFA|BcBA F2A2|Bcec BAFD|EFAB A2AA|
@@ -624,6 +621,9 @@ T:Cornstalk Fiddle and a Shoestring Bow
 M:4/4
 L:1/8
 K:G
+%%MIDI program 40
+%%MIDI chordprog 0
+%%MIDI bassprog 0
 e2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2z2|
 e2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2||
 D2G2 BGBG|A2G2 B3G|D2G2 BdBG|A2G2G2z2|
@@ -638,6 +638,9 @@ T:Angeline the Baker
 M:2/4
 L:1/8
 K:D
+%%MIDI program 40
+%%MIDI chordprog 0
+%%MIDI bassprog 0
 |:d/B/|AB d>A|Bd2 d/B/|AB d/B/A|
 B3 d/B/|AB d>e|fe d>e|fe dB|A>B A:|
 |:f/g/|af ed/e/|fe df/g/|af ed|B>B Bf/g/|
@@ -723,11 +726,17 @@ function saveCustomTune() {
   const name = document.getElementById('modalTuneName').value.trim();
   const key = document.getElementById('modalTuneKey').value.trim() || 'C';
   const source = document.getElementById('modalTuneSource').value.trim();
-  const abc = document.getElementById('modalTuneABC') ? document.getElementById('modalTuneABC').value.trim() : document.getElementById('modalTuneABC').value.trim();
+  let abc = document.getElementById('modalTuneABC') ? document.getElementById('modalTuneABC').value.trim() : document.getElementById('modalTuneABC').value.trim();
   const errorEl = document.getElementById('modalError');
 
   if (!name) { errorEl.textContent = 'Tune name is required.'; return; }
   if (!abc) { errorEl.textContent = 'ABC notation is required.'; return; }
+
+  // Auto-inject %%MIDI program 40 if not already present
+  if (!abc.includes('%%MIDI program 40')) {
+    // Insert after K: line
+    abc = abc.replace(/(K:[^\n]*\n)/i, '$1%%MIDI program 40\n%%MIDI chordprog 0\n%%MIDI bassprog 0\n');
+  }
 
   const modal = document.getElementById('addTuneModal');
   const editIndex = modal.dataset.editIndex;
@@ -794,8 +803,6 @@ loadCustomTunes();
 // APP STATE
 // ============================================================
 let audioCtx = null;
-let player = null;
-let violinPreset = null;
 let currentTuneIndex = 0;
 let visualObj = null;       // ABCJS render object
 let currentSynth = null;    // ABCJS synth instance
@@ -867,6 +874,26 @@ function centsDiff(freq, targetMidi) {
   return 1200 * Math.log2(freq / midiToFreq(targetMidi));
 }
 
+function midiToAbcNote(midi) {
+  // Convert MIDI number to ABC notation note string
+  const noteNames = ['C','_D','D','_E','E','F','_G','G','_A','A','_B','B'];
+  const noteIndex = ((midi % 12) + 12) % 12;
+  const octave = Math.floor(midi / 12) - 1; // MIDI octave
+  let abc = noteNames[noteIndex];
+  // ABC middle C (C4, MIDI 60) = 'C'
+  // C5 = 'c', C6 = 'c''
+  // C3 = 'C,', C2 = 'C,,'
+  if (octave >= 5) {
+    abc = abc.toLowerCase();
+    for (let i = 6; i <= octave; i++) abc += "'";
+  } else if (octave === 4) {
+    // default - uppercase, no modifier
+  } else {
+    for (let i = 3; i >= octave; i--) abc += ",";
+  }
+  return abc;
+}
+
 // ============================================================
 // INIT
 // ============================================================
@@ -890,13 +917,6 @@ function init() {
     loadTune();
   });
 
-  document.getElementById('violinSelect').addEventListener('change', (e) => {
-    ensureAudioCtx().then(() => {
-      loadViolin(e.target.value);
-      setStatus(`Switched to ${e.target.value} violin.`);
-    });
-  });
-
   document.getElementById('btnPreview').addEventListener('click', () => {
     if (isPlaying) { stopPreview(); } else { previewFullTune(); }
   });
@@ -917,35 +937,9 @@ function init() {
   setStatus('Select a tune and press Play to begin.');
 }
 
-const VIOLIN_PRESETS = {
-  JCLive: () => typeof _tone_0400_JCLive_sf2_file !== 'undefined' ? _tone_0400_JCLive_sf2_file : null,
-  FluidR3: () => typeof _tone_0400_FluidR3_GM_sf2_file !== 'undefined' ? _tone_0400_FluidR3_GM_sf2_file : null,
-  Aspirin: () => typeof _tone_0400_Aspirin_sf2_file !== 'undefined' ? _tone_0400_Aspirin_sf2_file : null,
-  GeneralUser: () => typeof _tone_0400_GeneralUserGS_sf2_file !== 'undefined' ? _tone_0400_GeneralUserGS_sf2_file : null,
-  SBLive: () => typeof _tone_0400_SBLive_sf2 !== 'undefined' ? _tone_0400_SBLive_sf2 : null,
-  Tone000: () => typeof _tone_0400_Tone_000_sf2_file !== 'undefined' ? _tone_0400_Tone_000_sf2_file : null,
-};
-let currentViolinName = 'GeneralUser';
-
-function loadViolin(name) {
-  const getter = VIOLIN_PRESETS[name];
-  if (!getter) return;
-  const preset = getter();
-  if (preset && player && audioCtx) {
-    violinPreset = preset;
-    player.adjustPreset(audioCtx, violinPreset);
-    currentViolinName = name;
-    console.log(`Switched to ${name} violin, zones: ${violinPreset.zones?.length}`);
-  }
-}
-
 async function ensureAudioCtx() {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    player = new WebAudioFontPlayer();
-  }
-  if (!violinPreset) {
-    loadViolin(currentViolinName);
   }
   if (audioCtx.state === 'suspended') {
     await audioCtx.resume();
@@ -976,14 +970,28 @@ function loadTune() {
     paddingbottom: 10,
     add_classes: true,
     clickListener: function(abcElem, tuneNumber, classes, analysis, drag, mouseEvent) {
-      if (abcElem && abcElem.pitches && abcElem.pitches.length > 0 && violinPreset && audioCtx) {
+      if (abcElem && abcElem.pitches && abcElem.pitches.length > 0) {
         ensureAudioCtx().then(() => {
+          // Build a tiny ABC string for just the clicked note(s) and play via ABCJS synth
+          const tune = TUNES[currentTuneIndex];
+          const kLine = tune.abc.match(/K:[^\n]*/)?.[0] || 'K:C';
+          let noteStr = '';
           for (const p of abcElem.pitches) {
             const midi = abcjsPitchToMidi(p);
             if (midi > 0) {
-              player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, audioCtx.currentTime, midi, 0.5, 1.0);
+              noteStr += midiToAbcNote(midi) + '2';
             }
           }
+          if (!noteStr) return;
+          const clickAbc = `X:1\nT:Click\nM:4/4\nL:1/8\n${kLine}\n%%MIDI program 40\n${noteStr}|]\n`;
+          const clickVisual = ABCJS.renderAbc("*", clickAbc, { add_classes: true });
+          if (!clickVisual || !clickVisual[0]) return;
+          const clickSynth = new ABCJS.synth.CreateSynth();
+          clickSynth.init({
+            audioContext: audioCtx,
+            visualObj: clickVisual[0],
+            options: { program: 40, soundFontVolumeMultiplier: 1.5, chordsOff: true }
+          }).then(() => clickSynth.prime()).then(() => clickSynth.start());
         });
       }
     }
@@ -1244,11 +1252,6 @@ async function playPhrase() {
   if (isPlaying || isRecording) return;
   await ensureAudioCtx();
 
-  if (!violinPreset) {
-    setStatus('Violin sound not loaded yet. Click and try again.');
-    return;
-  }
-
   if (currentPhraseNotes.length === 0) {
     setStatus('No notes in current phrase.');
     return;
@@ -1260,31 +1263,49 @@ async function playPhrase() {
   setStatus('Playing phrase...');
 
   try {
-    const quarterNoteDur = 60 / tempo; // seconds per quarter note (beat)
-    const wholeNoteDur = quarterNoteDur * 4; // seconds per whole note
-    let time = audioCtx.currentTime + 0.1;
+    // Build a phrase-specific ABC string
+    const phraseAbc = buildPhraseAbc();
+    console.log('Phrase ABC:', phraseAbc);
 
+    // Render offscreen
+    const phraseVisual = ABCJS.renderAbc("*", phraseAbc, { add_classes: true });
+    if (!phraseVisual || !phraseVisual[0]) {
+      throw new Error('Failed to render phrase ABC');
+    }
+
+    const phraseSynth = new ABCJS.synth.CreateSynth();
+    await phraseSynth.init({
+      audioContext: audioCtx,
+      visualObj: phraseVisual[0],
+      options: {
+        program: 40,
+        soundFontVolumeMultiplier: 1.5,
+        chordsOff: true
+      },
+      millisecondsPerMeasure: (60 / tempo) * 4 * 1000
+    });
+    await phraseSynth.prime();
+
+    // Simple note cell highlighting based on timing
+    const quarterNoteDur = 60 / tempo;
+    const wholeNoteDur = quarterNoteDur * 4;
+    let elapsed = 0;
     currentPhraseNotes.forEach((n, i) => {
-      // ABCJS duration: 1.0 = whole note, 0.5 = half, 0.25 = quarter, 0.125 = eighth
       const dur = n.duration * wholeNoteDur;
-      const noteOnDelay = (time - audioCtx.currentTime) * 1000;
-
-      // Highlight note cell during playback
+      const delay = elapsed * 1000;
       setTimeout(() => {
         document.querySelectorAll('.note-cell').forEach(c => c.classList.remove('active'));
         const cell = document.getElementById('note-' + i);
         if (cell) cell.classList.add('active');
-      }, noteOnDelay);
-
-      const noteMidis = n.midis || [n.midi];
-      for (const m of noteMidis) {
-        player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, time, m, dur * 0.9, 1.0);
-      }
-      time += dur;
+      }, delay);
+      elapsed += dur;
     });
 
-    const totalDur = (time - audioCtx.currentTime) * 1000;
-    await new Promise(resolve => setTimeout(resolve, totalDur + 200));
+    phraseSynth.start();
+
+    // Wait for playback to finish
+    const totalDur = elapsed * 1000;
+    await new Promise(resolve => setTimeout(resolve, totalDur + 500));
 
     document.querySelectorAll('.note-cell').forEach(c => c.classList.remove('active'));
   } catch (e) {
@@ -1298,13 +1319,19 @@ async function playPhrase() {
   setStatus('Your turn! Press Record and play the phrase on your fiddle.');
 }
 
+let synthController = null;
+
 function stopPreview() {
-  // Stop ABCJS synth
+  // Stop synth controller
+  if (synthController) {
+    try { synthController.pause(); } catch (e) { console.log('synth controller pause:', e); }
+  }
+  // Stop ABCJS synth (fallback)
   if (previewSynth) {
     try { previewSynth.stop(); } catch (e) { console.log('synth stop:', e); }
     previewSynth = null;
   }
-  // Stop timing callbacks
+  // Stop timing callbacks (fallback)
   if (previewTimingCallbacks) {
     try { previewTimingCallbacks.stop(); } catch (e) { console.log('timing stop:', e); }
     previewTimingCallbacks = null;
@@ -1325,7 +1352,7 @@ function stopPreview() {
 }
 
 // ============================================================
-// PREVIEW FULL TUNE via ABCJS Synth (handles repeats natively)
+// PREVIEW FULL TUNE via ABCJS SynthController (handles repeats + note tracking)
 // ============================================================
 async function previewFullTune() {
   if (isRecording) return;
@@ -1356,38 +1383,21 @@ async function previewFullTune() {
   });
 
   try {
-    // Create ABCJS synth
-    previewSynth = new ABCJS.synth.CreateSynth();
-    await previewSynth.init({
-      audioContext: audioCtx,
-      visualObj: visualObj[0],
-      options: {
-        program: 40, // violin
-        soundFontVolumeMultiplier: 1.5,
-        chordsOff: true // disable chord accompaniment
+    // CursorControl for note highlighting during preview
+    const cursorControl = {
+      onStart: function() {},
+      onFinished: function() {
+        stopPreview();
+        setStatus('Preview done! Press Play to practice a phrase.');
       },
-      millisecondsPerMeasure: (60 / tempo) * 4 * 1000
-    });
-    await previewSynth.prime();
-
-    // Set up timing callbacks for note highlighting
-    previewTimingCallbacks = new ABCJS.TimingCallbacks(visualObj[0], {
-      beatSubdivisions: 4,
-      eventCallback: function(event) {
-        if (!event) {
-          // Playback finished
-          stopPreview();
-          setStatus('Preview done! Press Play to practice a phrase.');
-          return;
-        }
-
+      onBeat: function(beatNumber, totalBeats, totalTime) {},
+      onEvent: function(event) {
         // Clear previous highlights
         document.querySelectorAll('#paper .abcjs-synth-highlight').forEach(el => {
           el.classList.remove('abcjs-synth-highlight');
         });
-
         // Highlight current elements
-        if (event.elements) {
+        if (event && event.elements) {
           for (const elemGroup of event.elements) {
             for (const elem of elemGroup) {
               if (elem) {
@@ -1396,14 +1406,37 @@ async function previewFullTune() {
             }
           }
         }
-      },
-      beatCallback: function(beatNumber, totalBeats, totalTime) {},
-      lineEndCallback: function(info) {}
+      }
+    };
+
+    // Use SynthController for synced playback + highlighting
+    if (!synthController) {
+      synthController = new ABCJS.synth.SynthController();
+      synthController.load('#synthControl', cursorControl, {
+        displayLoop: false,
+        displayRestart: false,
+        displayPlay: false,
+        displayProgress: false,
+        displayWarp: false
+      });
+    } else {
+      synthController.load('#synthControl', cursorControl, {
+        displayLoop: false,
+        displayRestart: false,
+        displayPlay: false,
+        displayProgress: false,
+        displayWarp: false
+      });
+    }
+
+    await synthController.setTune(visualObj[0], false, {
+      program: 40,
+      soundFontVolumeMultiplier: 1.5,
+      chordsOff: true,
+      qpm: tempo
     });
 
-    // Start playback and highlighting together
-    previewSynth.start();
-    previewTimingCallbacks.start();
+    synthController.play();
 
   } catch (e) {
     console.error('ABCJS synth preview error:', e);
@@ -1422,15 +1455,24 @@ function buildPhraseAbc() {
   const lines = tune.abc.split('\n');
   let header = '';
   let body = '';
+  let hasMidiProgram = false;
 
   for (const line of lines) {
     const trimmed = line.trim();
     if (trimmed.match(/^[A-Z]:/)) {
       if (trimmed.startsWith('Q:')) continue; // we'll set our own tempo
       header += trimmed + '\n';
+    } else if (trimmed.startsWith('%%')) {
+      header += trimmed + '\n';
+      if (trimmed.includes('MIDI program')) hasMidiProgram = true;
     } else if (trimmed.length > 0) {
       body += trimmed + ' ';
     }
+  }
+
+  // Ensure MIDI program 40 is present
+  if (!hasMidiProgram) {
+    header += '%%MIDI program 40\n%%MIDI chordprog 0\n%%MIDI bassprog 0\n';
   }
 
   // Add tempo header
