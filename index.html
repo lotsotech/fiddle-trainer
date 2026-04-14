@@ -468,7 +468,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.4</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.5</div>
 </header>
 
 <div class="container">
@@ -506,7 +506,7 @@ header h1 span { color: var(--accent); }
     <div class="bar-track"><div class="bar-fill" id="progressFill" style="width:0%"></div></div>
   </div>
 
-  <div class="phrase-results" id="phraseResults" style="display:none;">
+  <div class="phrase-results" id="phraseResults">
     <div class="phrase-results-title">Current Phrase <button id="btnToggleNotes" onclick="toggleNoteNames()" style="background:var(--bg3);color:var(--text-dim);border:1px solid var(--text-dim);border-radius:4px;padding:2px 8px;font-size:0.75rem;cursor:pointer;margin-left:8px;">Show Notes</button></div>
     <div class="notes-row" id="notesRow"></div>
   </div>
@@ -1070,7 +1070,7 @@ function loadTune() {
   currentPhraseIndex = 0;
   scoreCorrect = 0; scoreClose = 0; scoreMissed = 0;
   updateScoreDisplay();
-  phraseResults.style.display = 'none';
+  
 
   highlightCurrentPhrase();
   updateProgress();
@@ -1168,6 +1168,7 @@ function highlightCurrentPhrase() {
 
   // Also extract pitch info for recording comparison
   extractPhraseNotes(startMeasure, endMeasure);
+  renderNoteCells();
 }
 
 function extractPhraseNotes(startMeasure, endMeasure) {
@@ -1893,7 +1894,7 @@ async function toggleRecord() {
 
   // Show phrase results with note cells
   renderNoteCells();
-  phraseResults.style.display = 'block';
+  
 
   if (countdownEnabled) {
     setStatus('Get ready...');
@@ -2060,7 +2061,7 @@ function finishRecording() {
 function prevPhrase() {
   if (currentPhraseIndex <= 0) return;
   currentPhraseIndex--;
-  phraseResults.style.display = 'none';
+  
   highlightCurrentPhrase();
   updateProgress();
   btnPlay.disabled = false;
@@ -2075,10 +2076,10 @@ function nextPhrase() {
     btnPlay.disabled = true;
     btnRecord.disabled = true;
     // btnNext always enabled
-    phraseResults.style.display = 'none';
+    
     return;
   }
-  phraseResults.style.display = 'none';
+  
   highlightCurrentPhrase();
   updateProgress();
   btnPlay.disabled = false;
