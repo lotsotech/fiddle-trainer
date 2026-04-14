@@ -468,7 +468,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.3</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.4</div>
 </header>
 
 <div class="container">
@@ -1765,6 +1765,10 @@ function buildPhraseAbc() {
 
   const phraseMeasures = measures.slice(startMeasure, endMeasure);
   const phraseBody = phraseMeasures.join('|');
+
+  console.log(`[buildPhraseAbc] Phrase ${currentPhraseIndex}: measures ${startMeasure}-${endMeasure} of ${measures.length}`);
+  console.log(`[buildPhraseAbc] Content: ${phraseBody}`);
+  console.log(`[buildPhraseAbc] Notes extracted: ${currentPhraseNotes.length}`, currentPhraseNotes.map(n => n.noteName));
 
   return header + phraseBody + '|]';
 }
