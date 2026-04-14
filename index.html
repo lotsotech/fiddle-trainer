@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.1</div>
 </header>
 
 <div class="container">
@@ -1429,7 +1429,8 @@ async function previewFullTune() {
       program: 40,
       soundFontVolumeMultiplier: 1.5,
       chordsOff: true,
-      qpm: tempo
+      qpm: tempo,
+      millisecondsPerMeasure: (60 / tempo) * 4 * 1000
     });
 
     synthController.play();
