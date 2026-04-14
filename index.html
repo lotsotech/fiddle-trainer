@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.56</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57</div>
 </header>
 
 <div class="container">
@@ -517,6 +517,7 @@ header h1 span { color: var(--accent); }
     <button class="btn" id="btnPreview" style="background:#2a6e4e;">&#9654; Preview Full Tune</button>
     <button class="btn btn-play" id="btnPlay" disabled>&#9654; Play Phrase</button>
     <button class="btn btn-record" id="btnRecord" disabled>&#9679; Record</button>
+    <button id="btnCountdownToggle" onclick="toggleCountdown()" style="background:var(--accent2);color:#fff;font-size:0.8rem;padding:6px 12px;border:none;border-radius:6px;cursor:pointer;white-space:nowrap;" title="Toggle countdown before recording">3-2-1: ON</button>
     <button class="btn btn-next" id="btnNext" disabled>Next &#9654;</button>
     <button class="btn" id="btnRestart" style="background:#555;">&#8634; Start Over</button>
   </div>
@@ -541,117 +542,40 @@ header h1 span { color: var(--accent); }
 
 <script>
 // ============================================================
-// TUNE LIBRARY - Full ABC notation
+// TUNE LIBRARY - loaded from tunes.json
 // ============================================================
-const TUNES = [
-  {
-    name: "Soldier's Joy",
-    key: "D",
-    source: "https://thesession.org/tunes/1356#setting24087",
-    abc: `X:1
-T:Soldier's Joy
-M:4/4
-L:1/8
-K:D
-%%MIDI program 40
-%%MIDI chordprog 0
-%%MIDI bassprog 0
-|:FG|AFDF AFDF|A2d2 d2cB|AFDF AFDF|G2E2 E2FG|
-AFDF AFDF|A2d2 d2de|fafd egec|d2f2d2:|
-|:de|fdAd fagf|edcd efge|fdAd fgaf|edcB A2de|
-fdAd fagf|edcd efge|fafd egec|d2f2 d2:|`
-  },
-  {
-    name: "Sail Away Ladies",
-    key: "G",
-    source: "https://thesession.org/tunes/11080",
-    abc: `X:1
-T:Sail Away Ladies
-M:4/4
-L:1/8
-K:G
-%%MIDI program 40
-%%MIDI chordprog 0
-%%MIDI bassprog 0
-|:B2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2|
-B2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2:|
-|:g2g2 ged2|e3f e3g|g2g2 edB2|d3e d2e2|
-e2ed BAGA|A3G G3B|BAGE D2E2|G3A G2G2:|`
-  },
-  {
-    name: "Old Joe Clark",
-    key: "A Mix",
-    source: "https://thesession.org/tunes/14474",
-    abc: `X:1
-T:Old Joe Clark
-M:4/4
-L:1/8
-K:AMix
-%%MIDI program 40
-%%MIDI chordprog 0
-%%MIDI bassprog 0
-|:A2|e3f g2f2|e2d2 c2d2|e3f g2f2|e6 A2|
-e3f g2f2|e2d2 c2B2|A2c2 B2G2|A6:|
-|:E2|A3A A2A2|e2d2 c4|A3A c2A2|B8|
-A3A A2A2|e2d2 c2B2|A2c2 B2G2|A6:|`
-  },
-  {
-    name: "Cripple Creek",
-    key: "A",
-    source: "https://thesession.org/tunes/23886",
-    abc: `X:1
-T:Cripple Creek
-M:4/4
-L:1/8
-K:A
-%%MIDI program 40
-%%MIDI chordprog 0
-%%MIDI bassprog 0
-e|gaaa fecA|defd e2ee|Bce2 cBAF|EFAB A2ee|
-ga2b afec|defd e2ee|Bcef ecBA|EFAB A3A||
-|:Bccc BAFA|BcBA F2A2|Bcec BAFD|EFAB A2AA|
-Bccc Bccc|BcBA F2A2|Bcef ecBA|EFAB A4:|`
-  },
-  {
-    name: "Cornstalk Fiddle and a Shoestring Bow",
-    key: "G",
-    source: "https://tunearch.org/wiki/Cornstalk_Fiddle",
-    abc: `X:1
-T:Cornstalk Fiddle and a Shoestring Bow
-M:4/4
-L:1/8
-K:G
-%%MIDI program 40
-%%MIDI chordprog 0
-%%MIDI bassprog 0
-e2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2z2|
-e2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2||
-D2G2 BGBG|A2G2 B3G|D2G2 BdBG|A2G2G2z2|
-D2G2 BGBG|A2G2 B2d2|e2d2 BdBG|A2G2G2||`
-  },
-  {
-    name: "Angeline the Baker",
-    key: "D",
-    source: "https://thesession.org/tunes/14300",
-    abc: `X:1
-T:Angeline the Baker
-M:2/4
-L:1/8
-K:D
-%%MIDI program 40
-%%MIDI chordprog 0
-%%MIDI bassprog 0
-|:d/B/|AB d>A|Bd2 d/B/|AB d/B/A|
-B3 d/B/|AB d>e|fe d>e|fe dB|A>B A:|
-|:f/g/|af ed/e/|fe df/g/|af ed|B>B Bf/g/|
-af ed/e/|fe dd/e/|fe dB|A>B A:|`
-  }
-];
+let TUNES = [];
 
-// ============================================================
-// CUSTOM TUNES - localStorage persistence
-// ============================================================
-const BUILTIN_TUNE_COUNT = TUNES.length;
+async function loadTunesFromFile() {
+  try {
+    const resp = await fetch('tunes.json');
+    const data = await resp.json();
+    // Normalize property names: tunes.json uses "editable"/"needsAbc", code uses "_editable"/"_needsAbc"
+    data.forEach(t => {
+      if (t.editable) { t._editable = true; delete t.editable; }
+      if (t.needsAbc) { t._needsAbc = true; delete t.needsAbc; }
+    });
+    TUNES = data;
+    // Cache for offline use
+    try { localStorage.setItem('fiddleTrainer_tunesCache', JSON.stringify(data)); } catch (e) {}
+  } catch (e) {
+    console.warn('Failed to fetch tunes.json, trying offline cache:', e);
+    try {
+      const cached = localStorage.getItem('fiddleTrainer_tunesCache');
+      if (cached) {
+        TUNES = JSON.parse(cached);
+        console.log('Loaded tunes from offline cache');
+      } else {
+        console.error('No offline cache available');
+        TUNES = [];
+      }
+    } catch (e2) {
+      console.error('Failed to load offline cache:', e2);
+      TUNES = [];
+    }
+  }
+}
+
 
 function loadCustomTunes() {
   try {
@@ -673,27 +597,83 @@ function saveCustomTunesToStorage() {
   localStorage.setItem('fiddleTrainer_customTunes', JSON.stringify(customs));
 }
 
+// Persist edits to built-in editable tunes
+function saveEditableTuneOverrides() {
+  const overrides = {};
+  TUNES.forEach((t, i) => {
+    if (t._editable && !t._custom && t._edited) {
+      overrides[t.name] = { abc: t.abc, key: t.key, source: t.source || '' };
+    }
+  });
+  localStorage.setItem('fiddleTrainer_editOverrides', JSON.stringify(overrides));
+}
+
+function loadEditableTuneOverrides() {
+  try {
+    const stored = localStorage.getItem('fiddleTrainer_editOverrides') || localStorage.getItem('fiddleTrainer_editableOverrides');
+    if (stored) {
+      const overrides = JSON.parse(stored);
+      TUNES.forEach(t => {
+        if (t._editable && !t._custom && overrides[t.name]) {
+          t.abc = overrides[t.name].abc;
+          t.key = overrides[t.name].key;
+          t.source = overrides[t.name].source;
+          t._edited = true;
+          if (t._needsAbc && t.abc && !t.abc.includes('z8|z8|z8|z8|')) {
+            t._needsAbc = false; // ABC was filled in
+          }
+        }
+      });
+    }
+  } catch (e) {
+    console.warn('Failed to load editable overrides:', e);
+  }
+}
+
 function rebuildTuneSelector() {
   tuneSelect.innerHTML = '';
+  // Group tunes by key category
+  const keyGroups = {};
+  const keyOrder = ['G', 'D', 'A'];
   TUNES.forEach((t, i) => {
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = `${t.name} (${t.key})`;
-    tuneSelect.appendChild(opt);
+    // Normalize key for grouping: "A Mix" -> "A", etc.
+    let groupKey = t.key.replace(/\s*(Mix|Dor|Lyd|Loc).*$/i, '').trim();
+    if (!keyOrder.includes(groupKey)) groupKey = 'Other';
+    if (!keyGroups[groupKey]) keyGroups[groupKey] = [];
+    keyGroups[groupKey].push({ tune: t, index: i });
   });
+  // Build optgroups in order
+  for (const gk of [...keyOrder, 'Other']) {
+    const items = keyGroups[gk];
+    if (!items || items.length === 0) continue;
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = gk === 'Other' ? 'Other Keys' : `Key of ${gk}`;
+    for (const { tune, index } of items) {
+      const opt = document.createElement('option');
+      opt.value = index;
+      let label = `${tune.name} (${tune.key})`;
+      if (tune._needsAbc) label += ' (needs ABC)';
+      if (tune._custom) label += ' [custom]';
+      opt.textContent = label;
+      optgroup.appendChild(opt);
+    }
+    tuneSelect.appendChild(optgroup);
+  }
 }
 
 function updateDeleteButton() {
   const btnDel = document.getElementById('btnDeleteTune');
   const btnEdit = document.getElementById('btnEditTune');
-  const isCustom = TUNES[currentTuneIndex] && TUNES[currentTuneIndex]._custom;
+  const tune = TUNES[currentTuneIndex];
+  const isCustom = tune && tune._custom;
+  const isEditable = tune && (tune._custom || tune._editable);
   btnDel.style.display = isCustom ? 'inline-block' : 'none';
-  btnEdit.style.display = isCustom ? 'inline-block' : 'none';
+  btnEdit.style.display = isEditable ? 'inline-block' : 'none';
 }
 
 function editCustomTune() {
   const tune = TUNES[currentTuneIndex];
-  if (!tune || !tune._custom) return;
+  if (!tune || !(tune._custom || tune._editable)) return;
 
   document.getElementById('modalTuneName').value = tune.name;
   document.getElementById('modalTuneKey').value = tune.key;
@@ -748,7 +728,15 @@ function saveCustomTune() {
     TUNES[idx].key = key;
     TUNES[idx].source = source || '';
     TUNES[idx].abc = abc;
-    saveCustomTunesToStorage();
+    if (TUNES[idx]._editable && !TUNES[idx]._custom) {
+      TUNES[idx]._edited = true;
+      if (TUNES[idx]._needsAbc && abc && !abc.includes('z8|z8|z8|z8|')) {
+        TUNES[idx]._needsAbc = false;
+      }
+      saveEditableTuneOverrides();
+    } else {
+      saveCustomTunesToStorage();
+    }
     rebuildTuneSelector();
     tuneSelect.value = idx;
     currentTuneIndex = idx;
@@ -796,8 +784,7 @@ document.addEventListener('click', (e) => {
   if (e.target.id === 'addTuneModal') closeAddTuneModal();
 });
 
-// Load custom tunes immediately
-loadCustomTunes();
+// Tunes loaded in init() - custom tunes and overrides applied there
 
 // ============================================================
 // APP STATE
@@ -831,6 +818,9 @@ let animFrameId = null;
 
 // Parsed notes for current phrase (for pitch checking)
 let currentPhraseNotes = [];
+
+// Countdown toggle for recording
+let countdownEnabled = true;
 
 // ============================================================
 // DOM REFS
@@ -897,7 +887,10 @@ function midiToAbcNote(midi) {
 // ============================================================
 // INIT
 // ============================================================
-function init() {
+async function init() {
+  await loadTunesFromFile();
+  loadCustomTunes();        // localStorage custom tunes added after
+  loadEditableTuneOverrides();
   rebuildTuneSelector();
 
   tuneSelect.addEventListener('change', () => {
@@ -1580,6 +1573,23 @@ function stopMic() {
   analyserNode = null;
 }
 
+function toggleCountdown() {
+  countdownEnabled = !countdownEnabled;
+  const btn = document.getElementById('btnCountdownToggle');
+  btn.textContent = countdownEnabled ? '3-2-1: ON' : '3-2-1: OFF';
+  btn.style.background = countdownEnabled ? 'var(--accent2)' : '#555';
+}
+
+async function runCountdown() {
+  const steps = ['3...', '2...', '1...', 'Play!'];
+  for (let i = 0; i < steps.length; i++) {
+    setStatus(steps[i]);
+    await new Promise(r => setTimeout(r, 1000));
+    if (!isRecording) return false; // cancelled
+  }
+  return true;
+}
+
 async function toggleRecord() {
   if (isRecording) { stopRecording(); return; }
   if (isPlaying) return;
@@ -1596,6 +1606,12 @@ async function toggleRecord() {
   // Show phrase results with note cells
   renderNoteCells();
   phraseResults.style.display = 'block';
+
+  if (countdownEnabled) {
+    setStatus('Get ready...');
+    const ok = await runCountdown();
+    if (!ok) return; // user cancelled during countdown
+  }
 
   setStatus('Listening... play the notes on your fiddle!');
   highlightCurrentRecordNote();
@@ -1665,11 +1681,17 @@ function listenForNotes() {
   const target = currentPhraseNotes[recordingNoteIndex];
   const targetMidi = target.midi;
   let stableCount = 0;
-  const REQUIRED_STABLE = 3;
+  const REQUIRED_STABLE = 4; // Require 4 stable frames for more reliable detection
+
+  // Violin frequency range: G3 (196 Hz) to E7 (2637 Hz)
+  const MIN_FREQ = 196;
+  const MAX_FREQ = 2637;
 
   const beatDur = 60 / tempo;
   const noteDur = target.duration * 4 * beatDur; // duration is in fractions of whole note
-  const timeLimit = Math.max(noteDur * 6, 3) * 1000;
+  let timeLimit = Math.max(noteDur * 6, 3) * 1000;
+  // Double timeout for the first note (give extra time to get started)
+  if (recordingNoteIndex === 0) timeLimit *= 2;
   const startTime = performance.now();
 
   function detect() {
@@ -1688,7 +1710,8 @@ function listenForNotes() {
     analyserNode.getFloatTimeDomainData(pitchBuffer);
     const freq = autoCorrelate(pitchBuffer, audioCtx.sampleRate);
 
-    if (freq > 0 && freq > 80 && freq < 2000) {
+    // Filter to violin range: G3 (196 Hz) to E7 (2637 Hz)
+    if (freq > 0 && freq >= MIN_FREQ && freq <= MAX_FREQ) {
       const detectedMidi = freqToMidi(freq);
       const detectedName = midiToNoteName(Math.round(detectedMidi));
       const cents = centsDiff(freq, targetMidi);

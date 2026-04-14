@@ -1,0 +1,527 @@
+[
+  {
+    "name": "Cornstalk Fiddle and a Shoestring Bow",
+    "key": "G",
+    "source": "https://tunearch.org/wiki/Cornstalk_Fiddle",
+    "abc": "X:1\nT:Cornstalk Fiddle and a Shoestring Bow\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\ne2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2z2|\ne2d2 BGBd|e2d2 g2ag|e2d2 BdBG|A2G2G2||\nD2G2 BGBG|A2G2 B3G|D2G2 BdBG|A2G2G2z2|\nD2G2 BGBG|A2G2 B2d2|e2d2 BdBG|A2G2G2||"
+  },
+  {
+    "name": "Sail Away Ladies",
+    "key": "G",
+    "source": "https://thesession.org/tunes/11080",
+    "abc": "X:1\nT:Sail Away Ladies\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:B2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2|\nB2BG AGBG|B3A GB3|BAGE D2E2|G3A G2G2:|\n|:g2g2 ged2|e3f e3g|g2g2 edB2|d3e d2e2|\ne2ed BAGA|A3G G3B|BAGE D2E2|G3A G2G2:|"
+  },
+  {
+    "name": "Angeline the Baker",
+    "key": "D",
+    "source": "https://thesession.org/tunes/14300",
+    "abc": "X:1\nT:Angeline the Baker\nM:2/4\nL:1/8\nK:D\n%%MIDI program 40\n|:d/B/|AB d>A|Bd2 d/B/|AB d/B/A|\nB3 d/B/|AB d>e|fe d>e|fe dB|A>B A:|\n|:f/g/|af ed/e/|fe df/g/|af ed|B>B Bf/g/|\naf ed/e/|fe dd/e/|fe dB|A>B A:|"
+  },
+  {
+    "name": "Soldier's Joy",
+    "key": "D",
+    "source": "https://thesession.org/tunes/1356#setting24087",
+    "abc": "X:1\nT:Soldier's Joy\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:FG|AFDF AFDF|A2d2 d2cB|AFDF AFDF|G2E2 E2FG|\nAFDF AFDF|A2d2 d2de|fafd egec|d2f2d2:|\n|:de|fdAd fagf|edcd efge|fdAd fgaf|edcB A2de|\nfdAd fagf|edcd efge|fafd egec|d2f2 d2:|"
+  },
+  {
+    "name": "Cripple Creek",
+    "key": "A",
+    "source": "https://thesession.org/tunes/23886",
+    "abc": "X:1\nT:Cripple Creek\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\ne|gaaa fecA|defd e2ee|Bce2 cBAF|EFAB A2ee|\nga2b afec|defd e2ee|Bcef ecBA|EFAB A3A||\n|:Bccc BAFA|BcBA F2A2|Bcec BAFD|EFAB A2AA|\nBccc Bccc|BcBA F2A2|Bcef ecBA|EFAB A4:|"
+  },
+  {
+    "name": "Old Joe Clark",
+    "key": "A Mix",
+    "source": "https://thesession.org/tunes/14474",
+    "abc": "X:1\nT:Old Joe Clark\nM:4/4\nL:1/8\nK:AMix\n%%MIDI program 40\n|:A2|e3f g2f2|e2d2 c2d2|e3f g2f2|e6 A2|\ne3f g2f2|e2d2 c2B2|A2c2 B2G2|A6:|\n|:E2|A3A A2A2|e2d2 c4|A3A c2A2|B8|\nA3A A2A2|e2d2 c2B2|A2c2 B2G2|A6:|"
+  },
+  {
+    "name": "Ballinara Ora",
+    "key": "G",
+    "source": "https://thesession.org/tunes/8263",
+    "abc": "X:1\nT:Ballinara Ora\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nF|\"D\"D3/2E/D \"Bm\"d3/2e/f|\"Em\"e3/2d/B \"D\"d2 f|\"A\"e3/2d/c \"G\"Bcd|\"D\"AFD \"A\"E2 F|\n \"D\"D3/2E/D \"Bm\"d3/2e/f|\"Em\"e3/2d/B \"D\"d2 f|\"A\"e3/2d/c \"G\"Bcd|\"D\"AFD \"A\"E2 E|\n \"Em\"B3/2G/E E3/2G/B|\"Em\"B3 G2 G|\"D\"A3/2F/D D3/2F/A|\"D\"A3 F2 E|\n \"Em\"B3/2G/E E3/2G/B|\"A\"e3 c3-|\"A\"c2 F \"D\"dAF|\"A\"GEC \"D\"D2 z|",
+    "editable": true
+  },
+  {
+    "name": "Cairo",
+    "key": "G",
+    "source": "https://thesession.org/tunes/15846",
+    "abc": "X:1\nT:Cairo\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nM:9/8\n |:DEG|(B3 B2)d BAG|(A3 A)GA BAG|(E3 E2)G E2D|B,6 B,CD|\n (E3 E2)G E2D|(B,3 B,2)G EDB,|(A,3 A,)G,A, B,A,G,|1 G,6:|2 (G,3 G,)G,A, B,CD||\n |:(E3E2)G E2D|(B,3 B,) G,A, B,CD|(E3 E2)D E2G|(B3 B)G,A, (3B,CD|\n (E3 E2)G E2D|(B,3B,2)G EDB,|(A,3 A,)G,A, B,A,G,|1 (G,3 G,)G,A, B,CD:|2 G,6||",
+    "editable": true
+  },
+  {
+    "name": "Cora Dye",
+    "key": "G",
+    "source": "",
+    "abc": "X:1\nT:Cora Dye\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Dog Big And Dog Little",
+    "key": "G",
+    "source": "https://thesession.org/tunes/2369",
+    "abc": "X:1\nT:Dog Big And Dog Little\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:d2dc d2AF|d2fd (3Bcd ec|dcde dAFA|BGEA FDFA|\n dfec d2AF|defd (3Bcd ec|defd AFDF|BGEA FDFA|\n BE (3EEE BEcE|BE (3EEE ABcd|BE (3EEE BEcE|dcdA FGAd|\n BE (3EEE BEcE|BE (3EEE ABcd|BE (3EEE BEcE|dcdA FGBc|\n d2fd cdec|(3dcd fd faaf|d2fd adfa|bged ceAc|\n d2Ad (3Bcd ec|defd faaf|~g2gf edBA|(3Bcd eg (3fgf ef:|d8||",
+    "editable": true
+  },
+  {
+    "name": "Elk River Blues",
+    "key": "G",
+    "source": "https://thesession.org/tunes/21640",
+    "abc": "X:1\nT:Elk River Blues\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nz2 G2 B2 d2|\"C\" e4 e4|z2 ef e2 d2|[M: 2/4 ] BA B2|[M: 4/4 ] \"G\" d4 d4|\n z2 AA B2 d2|\"C\" e4 e4|z2 ef e2 d2|[M:2/4 ] BA G2|[M:4/4] \"D\" A4 A4|\n z2 DD E2 G2|\"Am\" A4 A4|z2 AB A2 G2|[M:2/4 ] ED E2|[M: 4/4] \"G\" G4 G4|\n z2 DD E2 G2|\"Am\" A4 A4|z2 AB A2 G2|[M:2/4 ] ED E2|[M: 4/4] \"G\" G4 G4|",
+    "editable": true
+  },
+  {
+    "name": "I Looked East And I Looked West",
+    "key": "G",
+    "source": "https://thesession.org/tunes/6015",
+    "abc": "X:1\nT:I Looked East And I Looked West\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:GD|GB B/c/B/A/|FA AD|G>A Bc|d2 cA|\n GB B/c/B/A/|FA AB|cA FA|G2:|\n |:Bd|g2 fe|fA A>B|cd ef|g2 fe|\n dg fe|fA AB|cd/c/ BA|G2:|",
+    "editable": true
+  },
+  {
+    "name": "Kitty Got A Clinkin'",
+    "key": "G",
+    "source": "https://thesession.org/tunes/23045",
+    "abc": "X:1\nT:Kitty Got A Clinkin'\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:^FAAA BcdB|AFAF ~E2 DE|FAAA Bc d2|efed e2dA|\n FAAA BcdB|AFAF ~E2 DE|FAAA Bcdf|1 efec d2[^G=F]2:|2 efec def=g||\n |:afdf ~e2de|f2df e2de|f2aa b2bb|afdf e2df|\n afdf ~e2de|f2df e2de|f2aa b2bb|1 afec defg:|2 afec d2[^G=F]2||",
+    "editable": true
+  },
+  {
+    "name": "Lost Girl",
+    "key": "G",
+    "source": "https://thesession.org/tunes/16742",
+    "abc": "X:1\nT:Lost Girl\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:DEFA B3A|FBAB FBEB|DEFA B2AB|dBAF EDB,A,|\n DEFA B3A|FBAB FBEB|DEFA B2AB|dBAF ED~D2:|\n |:d4d2BA|Beed e3f|d4d2ed|f4f2e2|\n d4d2BA|Beed e3f|defe defe|dBAF ED~D2:|",
+    "editable": true
+  },
+  {
+    "name": "Mak A Kishie Needle, Dye",
+    "key": "G",
+    "source": "https://thesession.org/tunes/11993",
+    "abc": "X:1\nT:Mak A Kishie Needle, Dye\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nA|:BdBG AB c2|BdBG Bdgd|BdBG ABce|1 dcBA G2 GA:|2 dcBA G2 Bc||\n |:dBgB eAcA|dBgB dgBg|dBgB eAcA|1 dcBA G2 Bc:|2 dcBA G4||",
+    "editable": true
+  },
+  {
+    "name": "Meriweather",
+    "key": "G",
+    "source": "https://thesession.org/tunes/15220",
+    "abc": "X:1\nT:Meriweather\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nD GA|:B2 BA GAGF|E2 A2 A2 E2|DEGA Bdef|(3gag fg edBA|\n B2 BA GAGF|E2 A2 A2 GE|DEGA B d2 e|1 dB A2 GDGA:|2\n dB A2 G2 Bd|:g g2 a ge d2|gfga g4|e2 a2 a2 a2|(3efg ab a2 g2|\n b2 ba g2 d e-|e d ef g2 de-|e d ef ge d2|1 BG AB G2 d2:|2\n BG AB G4||",
+    "editable": true
+  },
+  {
+    "name": "MicMac Square Dance Tune",
+    "key": "G",
+    "source": "https://thesession.org/tunes/18205",
+    "abc": "X:1\nT:MicMac Square Dance Tune\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:cA cd|ed Bc|dB GB|de dB|\n cA cd|ed Bc|dB GB|1 A2 A>B:|2 A2 cd||\n |:ea ag|ed Bd|ea ag|ab g2|\n ea ag|ed Bd|e/f/g e/f/g|BG A2:|",
+    "editable": true
+  },
+  {
+    "name": "Nail That Catfish To The Tree",
+    "key": "G",
+    "source": "https://thesession.org/tunes/8979",
+    "abc": "X:1\nT:Nail That Catfish To The Tree\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nD2|:G2 BG AGBG|cGAG B2 BG|ABAG F2 AB|AGFD (3EFE D2|\n G2 BG AGBG|cGAG B2 BG|ABAG FDEF|1 G4 G2 D2:|2 G4 G2 F2||\n E4 G4|c6 B2|ABAG F2 AB|AGFD (3EFE D2|\n E4 G4|c6 B2|ABAG FDEF|1 G4 G2 F2:|2 G6 D2||",
+    "editable": true
+  },
+  {
+    "name": "Old Chattanooga",
+    "key": "G",
+    "source": "",
+    "abc": "X:1\nT:Old Chattanooga\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Old Man And The Old Woman",
+    "key": "G",
+    "source": "https://thesession.org/tunes/4382",
+    "abc": "X:1\nT:Old Man And The Old Woman\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:Bc|dedB GBdB|cdcB A3d|fgfe dfaf|gage d2Bc|\n dedB GBdB|cdcB A3d|fgfe dfaf|g2gfg2:|\n |:Bc|dg2f g2fe|df2e f2ed|ce2 de2 dc|BABcd2Bc\n dg2f g2fe|df2e f2ed|ce2 de2 dc|BGAFG2:|",
+    "editable": true
+  },
+  {
+    "name": "Ora Lee",
+    "key": "G",
+    "source": "",
+    "abc": "X:1\nT:Ora Lee\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Pretty Little Dog",
+    "key": "G",
+    "source": "https://thesession.org/tunes/1944",
+    "abc": "X:1\nT:Pretty Little Dog\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:eg|a2e2 g2ag|edcB A2G2|A2 (3AAA c2d2|e4 e2eg|\n a2e2 g2ag|edcB A2G2|A2 (3ABc BAG2|A4 A2:|\n |:AB|c2AB cBcd|edcB A2G2|A2 (3AAA c2d2|e4 e2eg|\n a2e2 g2ag|edcB A2G2|A2 (3ABc BAG2|1 A4 A2:|2 A4 A4||",
+    "editable": true
+  },
+  {
+    "name": "Shove The Pig's Foot A Little Closer To The Fire",
+    "key": "G",
+    "source": "https://thesession.org/tunes/7905",
+    "abc": "X:1\nT:Shove The Pig's Foot A Little Closer To The Fire\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:GA|BcBA GEEF|GAGE DDB,C|DEGA B3 c|B2 A2- A3 B-|\n BcBA GDEF|GAGE D3 D|EF G2 B3 G|A2 G2- G2-:|\n |:GA|Bd- dB d2 Bd|edBc d4|Bc d2 g3 d|e2 d2- d3 A|\n Bd- dB ddBd|edBc d4|B3 c BAGB|A2 G2- G2-:|",
+    "editable": true
+  },
+  {
+    "name": "The Big Reel Of Ballynacally",
+    "key": "G",
+    "source": "https://thesession.org/tunes/133",
+    "abc": "X:1\nT:The Big Reel Of Ballynacally\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:DG (3GGG A2 dc|AGFG AGFG|DG (3GGG A2 dc|AGFG ~=F3 E|\n DG (3GGG A2 dc|AGFG ABcA|~d3 e fd (3ddd|1 dedc AGGF:|2 dedc AGGA||\n g2 dg (3ggg dg|(3ggg ag fdef|(3ggg fg ~a3 g|fdcA BGBd|\n g2 fg a=f (3fff|=fgfd e2 ec|~d3 e fedc|1 AGFG AGGA:|2 AGFG AGGD||",
+    "editable": true
+  },
+  {
+    "name": "The Girl I Left Behind Me",
+    "key": "G",
+    "source": "https://thesession.org/tunes/5418",
+    "abc": "X:1\nT:The Girl I Left Behind Me\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:g/f/|ed BA|BG E>F|G2 G/A/B/c/|d2 dg/f/|\n ed BA|BG E>G|FA DE/F/|G2 G:|\n |:z/A/|Bd ef|gd BG|Bd ef|g2 f>^c|\n ed BA|BG E>G|FA DE/F/|G2 G:|",
+    "editable": true
+  },
+  {
+    "name": "The Possum's Tail Is Bare",
+    "key": "G",
+    "source": "https://thesession.org/tunes/13617",
+    "abc": "X:1\nT:The Possum's Tail Is Bare\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\n|:DE|\"D\" F2 FF FEDF|\"G\" G2 G2 B3 B|\"D\" A2 F2 E2 D2|\"A\" [A,4E4][A,2E2] DE|\n \"D\" F2 FF FEDF|\"G\" G2 G2 B3 B|\"D\" A2 F2 \"A\" E2 C2|\"D\" D4D2:|\n |:FE|\"D\" D2 F2 A2 B2|\"C\" [E3=c3] c d2 dc|\"G\" B2 G2 Bc d2|\"A\" A3 A A2 AB/c/|\n \"D\" d2 dd dBAF|\"G\" G2 G2 B3 B|\"D\" A2 F2 \"A\" E2 C2|\"D\" D4D2:|",
+    "editable": true
+  },
+  {
+    "name": "Wayesborough",
+    "key": "G",
+    "source": "https://thesession.org/tunes/21681",
+    "abc": "X:1\nT:Wayesborough\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nGE|:\"G\" DEGA Bcd2|edgd edBG|\"Am\" (A4 A)BAG|EA-AB A2 GE|\n \"G\" DEGA Bdef|\"C\" g2g2 edBG|\"D7\" DFGA BGAG|1 \"G\" EG-G2 GzGE:|2 \"G\" EG-G2 Gzga||\n |:\"G\" b2 b2 a2 a2|\"G\" gage d2 B2|\"Am\" a3a abag|ea-ab a-aga|\n \"G\" b2 b2 a2 a2|\"C\" gage dBAG|\"D7\" DFGA BGAG|1 \"G\" EG-G2 Gzga:|2 \"G\" EG-G2 Gzcd||\n |:\"C\" e4 d4|cdcA BGAG|\"Am\" EA-AG ABAG|EGAB ABcd|\n \"C\" e2 e2 d2 d2|cdcA BGAG\"C\"|EFGA \"D7\" BGAG|1 \"G\" EG-G2 Gzcd:|2 \"G\" EG2 FG4||",
+    "editable": true
+  },
+  {
+    "name": "Bonaparte Crossing The Rhine",
+    "key": "D",
+    "source": "https://thesession.org/tunes/7",
+    "abc": "X:1\nT:Bonaparte Crossing The Rhine\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:EG|A2 AB AGE2|cdec d2 eg|aged cded|cAGE G2 cB|\n A2 AB AGE2|cdec d2 eg|aged cAGE|A2 A2 A2:|\n |:eg|aged cdeg|agec d2 eg|aged cded|cAGE G2 EG|\n A2 AB AGEG|cdec d2 eg|aged cABG|A2 (3cBG A2:|",
+    "editable": true
+  },
+  {
+    "name": "Cindy",
+    "key": "D",
+    "source": "",
+    "abc": "X:1\nT:Cindy\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Cumberland Gap",
+    "key": "D",
+    "source": "https://thesession.org/tunes/25796",
+    "abc": "X:1\nT:Cumberland Gap\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|: D4 D2 DE | FG A2 B4 | B2 A2 FEDE | FEDF EDB,A, |\n D4 D2 DE | FG A2 B4 | B2 A2 FEDE |1 FDEF D2 A,B, :|2 FDEF D4||\n |: e4 e3f- | fefe d3A | BABc dABd | AFEF D4 :|\n |: f3a fedA | B3B- BABd | f3f- fedA | B3B- BABc |\n dABd AFDE |1 FEFF D2 de :|2 FDEF D4 ||",
+    "editable": true
+  },
+  {
+    "name": "Dry And Dusty",
+    "key": "D",
+    "source": "https://thesession.org/tunes/21389",
+    "abc": "X:1\nT:Dry And Dusty\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:dB|A2 d2 fded|f2 f2 edBd|A2 d2 fded|f2 a2 a2 aa|\n A2 d2 fded|f2 a2 e f2 e|ddFG AFDE|F2 D2 D2:|\n |:dB|A2 F2 FEDE|F2 A2 A2 dB|A2 F2 FEDE|F2 D2 D2 dB|\n A2 F2 FEDE|F2 A2 A2 Bc|d2 d2 BAFG|A2 D2 D2:|",
+    "editable": true
+  },
+  {
+    "name": "Duck River",
+    "key": "D",
+    "source": "https://thesession.org/tunes/7066",
+    "abc": "X:1\nT:Duck River\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:A,B,|D2 DD ED DD|F2 A2 A2 Ad|B2 Ad B2 AG|F2 FF ED B,A,|\n A,B, DD ED DD|F2 A2 A2 Ad|B2 Ad B2 AG|FD EC D2:|\n fa aa a2 ag|fd dd d2 dd|b2 bb b2 ba|ge ee e2 ee|\n fa aa a2 ag|fd dd d2 AB|d2 AB d2 AG|FD EC D2 D2|",
+    "editable": true
+  },
+  {
+    "name": "Ducks On The Millpond",
+    "key": "D",
+    "source": "https://thesession.org/tunes/20503",
+    "abc": "X:1\nT:Ducks On The Millpond\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|\"D\" d2 d2 fdef|defd e(dBA)|d2 d2 fde(d|\"A\" BA)Bd \"D\" e(dBA)|\n \"D\" d2 d2 fdef|defd e(dBA)|d2 gdfd ed|\"A\" (BA)Bd e\"D\"d L d2||\n \"D\" (f a2) (a2 b) ae|ffaf e(d L d2)|(f a2) (baf)e (d|\"A\" BA)Bd \"D\" e(d L d2)|\n \"D\" (f a2) (a2 b) ae|ffaf e(d L d2)|(f a2) (a b2) B2|\"A\" defd e\"D\"(d L d2)||",
+    "editable": true
+  },
+  {
+    "name": "Fall on my Knees",
+    "key": "D",
+    "source": "",
+    "abc": "X:1\nT:Fall on my Knees\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Julianne Johnson",
+    "key": "D",
+    "source": "https://thesession.org/tunes/19290",
+    "abc": "X:1\nT:Julianne Johnson\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:\"D\"fedf edBA|Bd de d2de|f2 a2 aab2|\"A\" a8|\n \"D\"fedf edBA|Bd de d2de|f2 f2 ed B2|\"A\" A8:|\n |:\"G\" BABc d3A|BABc d3 A|BABd ed d2|\"D\"A6 A2|\n \"G\"BABc d2 AA|BABc d2 e2|\"D\"f2ff edB2|\"A7\"A8:|",
+    "editable": true
+  },
+  {
+    "name": "Liberty",
+    "key": "D",
+    "source": "https://thesession.org/tunes/2317",
+    "abc": "X:1\nT:Liberty\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:ag|f2A2 f2A2|fgfe d2ef|g2B2 g2B2|gagf e2ag|\n f2A2 f2A2|fgfe d2ef|g2e2 cBA2|[d4F4] [d2F2]:|\n |:B2|ABAG F2A2|d2e2 f3f|g2e2 cBA2|dcde f2d2|\n ABAG F2A2|dcde f3f|g2e2 cBA2|d4 d2:|",
+    "editable": true
+  },
+  {
+    "name": "Lily Of The Valley",
+    "key": "D",
+    "source": "https://thesession.org/tunes/11807",
+    "abc": "X:1\nT:Lily Of The Valley\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:G2 BG DGBG|AGFA cAFA|G2 AG DGBG|AdcA AGGF|\n G2 BG DGBG|AGFA cAFA|G2 AG DGBG|1 AdcA AGGF:|2 AdcA AGGB||\n |:cdec BcdB|ABAG EAAG|EAAB cdec|\n Bdgd BG ~G2|[M:2/4] DGGB:|[M:4/4]cdeB cdeA|\n BcdA BcdB|cdeB cd e2|e=fed cAAB|\n cdeB cdec|Bdgd BGAB|c3 A B3 G|[M:2/4]AGFA||",
+    "editable": true
+  },
+  {
+    "name": "Mak A Kishie Needle, Dye",
+    "key": "D",
+    "source": "https://thesession.org/tunes/11993",
+    "abc": "X:1\nT:Mak A Kishie Needle, Dye\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\nA|:BdBG AB c2|BdBG Bdgd|BdBG ABce|1 dcBA G2 GA:|2 dcBA G2 Bc||\n |:dBgB eAcA|dBgB dgBg|dBgB eAcA|1 dcBA G2 Bc:|2 dcBA G4||",
+    "editable": true
+  },
+  {
+    "name": "Memories Of Sadie MacDonald",
+    "key": "D",
+    "source": "https://thesession.org/tunes/12639",
+    "abc": "X:1\nT:Memories Of Sadie MacDonald\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:A|G<EE>D E<CC>A|G<Ec>E D/D/D D>A|G<EE>D E<CC>A|G<Ec>E C/C/C C:|\n |:a|g<ce>d e<cc>a|g<ce>c d/d/d d>a|g<ce>d c/d/e/d/ c>G|A<cG>E C/C/C C:|",
+    "editable": true
+  },
+  {
+    "name": "Mississippi Sawyer",
+    "key": "D",
+    "source": "https://thesession.org/tunes/5935",
+    "abc": "X:1\nT:Mississippi Sawyer\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\nfg|:\"D\" a2 af a2 af|af a2 b2 a2|\"G\" g2 ef g2 ef|gf g2 a2 g2|\n \"D\" f2 fg fe dc|de fg a2 ef|\"A\" gf ed cA Bc|1 \"D\" d2 f2 d2 fg:|2 d2 de d2 fe||\n |:\"D\" d2 fe d2 fe|de fg a4|\"A\" e2 c2 A2 c2|AB cd ef ec|\n \"D\" d2 fe d2 fe|de fg a2 ef|\"A\" gf ed cA Bc|1 \"D\" d2 f2 d2 fe:|2 \"D\" d2 f2 d2||",
+    "editable": true
+  },
+  {
+    "name": "Over The Waterfall",
+    "key": "D",
+    "source": "https://thesession.org/tunes/5353",
+    "abc": "X:1\nT:Over The Waterfall\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:z2|f2a2 gfe2|dedB A2de|f2a2 gfe2|f6 de|\n f2a2 gfe2|dedB A2AB|=c2c2 B2A2|G6:|\n |:FG|A2AA B2B2|ABAG F2FG|A2d2 cde2|f6 FG|\n A2AA B2B2|ABAG F2FG|A2AA GFE2|D6:|",
+    "editable": true
+  },
+  {
+    "name": "Pretty Little Dog",
+    "key": "D",
+    "source": "https://thesession.org/tunes/1944",
+    "abc": "X:1\nT:Pretty Little Dog\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:eg|a2e2 g2ag|edcB A2G2|A2 (3AAA c2d2|e4 e2eg|\n a2e2 g2ag|edcB A2G2|A2 (3ABc BAG2|A4 A2:|\n |:AB|c2AB cBcd|edcB A2G2|A2 (3AAA c2d2|e4 e2eg|\n a2e2 g2ag|edcB A2G2|A2 (3ABc BAG2|1 A4 A2:|2 A4 A4||",
+    "editable": true
+  },
+  {
+    "name": "Ragtime Annie",
+    "key": "D",
+    "source": "https://thesession.org/tunes/3954",
+    "abc": "X:1\nT:Ragtime Annie\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:DFAF B2AF|DFAF B2AF|DFDF B2AF|Ac2A c2B2|\n ABcA BcBA|AB2A BcBA|ABcd egfe|d6 fg:|\n a2ab afdB|A2A2 A2fg|a2a2 g2f2|B6 ef|\n gfef gfed|c2A2 c2A2|B2B2 A2G2|F6 fg|\n a2ab afdB|A2A2 A2fg|a2a2 g2f2|B6 ga|\n b2b2 bafg|a2ab afdB|ABcd egfe|d6 GA|\n |:B2B2 BGAB|=cB=cd =c2de|f2f2 fdef|gfga g2GA|\n B2B2 BGAB|=cB=cd =c2De|f2f2 fdef|gfga g4:|",
+    "editable": true
+  },
+  {
+    "name": "River Bend",
+    "key": "D",
+    "source": "https://thesession.org/tunes/4817",
+    "abc": "X:1\nT:River Bend\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\nf|:e2 A f2 d|ecA Ace|g2 d BAB|GBd gdB|\n e2 A f2 d|ecA Ace|g2 e dcd|ecA A2 f:|\n aba aec|Ace agf|gag gdB|GBd gdB|\n aba aec|Ace agf|g2 e dcd|ecA A2 e|\n aba aec|Ace agf|gag gdB|GBd gdB|\n =cBc d^cd|efg agf|g2 e dcd|ecA A2 f||",
+    "editable": true
+  },
+  {
+    "name": "Rock That Cradle, Lucy",
+    "key": "D",
+    "source": "https://thesession.org/tunes/13400",
+    "abc": "X:1\nT:Rock That Cradle, Lucy\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n=f|\"D\" f/a/f/e/ dB|\"A\" c(e e>)e|\"G\" g/a/g/e/ \"A7\" Bc|\"D\" d>e d=f|\n \"D\" f/a/f/e/ dB|\"A\" c(e e2)|\"G\" g/a/g/e/ \"A7\" Bc|\"D\" d>d dB||\n \"D\" A[df] [d/f/]d/[d/f/]d/|\"D\" A[df] [d/f/][d/f/][d/f/][d/f/]|\"A\" A[ce] [c/e/][c/e/][c/e/][c/e/]|\"A\" A[ce] [c/e/][c/e/][c/e/][c/e/]|\n \"D\" A[df] [d/f/]d/[d/f/]d/|\"D\" A[df] [d/f/][d/f/][d/f/][d/f/]|\"G\" g/f/e/c/ \"A\" Ac|\"D\" d>e d||",
+    "editable": true
+  },
+  {
+    "name": "Saint Anne's",
+    "key": "D",
+    "source": "https://thesession.org/tunes/103",
+    "abc": "X:1\nT:Saint Anne's\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:fedf edcB|A2FA DAFA|B2GB EBGB|A2FA DAFA|\n fedf edcB|A2FA DAFA|BGed cABc|eddc d2 de:|\n |:f2fg fedc|Bggf g2gf|edcB ABce|baa^g abag|\n f2fg fedc|Bggf g2gf|edcB ABcd|eddc d2 de:|",
+    "editable": true
+  },
+  {
+    "name": "Sally Ann's A Gal I Like",
+    "key": "D",
+    "source": "https://thesession.org/tunes/10861",
+    "abc": "X:1\nT:Sally Ann's A Gal I Like\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:B/c/d|e3f efed|cdef g2 ag|f2 de fded|BAAB defd|\n e3f efed|cdef g2 ag|f2 de fded|BAAB A2:|\n |:B/c/d|efec ABcA|BABc defd|efec ABcA|BA^GF E2 cd|\n efec ABcA|BABc dfeg|f2 ef gfed|BAAB A2:|",
+    "editable": true
+  },
+  {
+    "name": "Sarah Armstrong's Tune",
+    "key": "D",
+    "source": "https://thesession.org/tunes/22271",
+    "abc": "X:1\nT:Sarah Armstrong's Tune\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:\"D\"A,2DA,B,2DB,|A,B,DE FED2|\"A\"E2AEF2AF|EFAB cBA2|\n \"D\"A,2DA,B,2DB,|A,B,DE FED2|\"A\"E3F EFAB|AFED \"D\"D4:|\n \"D\"d3c dBAF|\"A\"E3F EFAF|\"G\"AB2A B2B2|\"A\"ABcAd2c2|\n \"D\"d3c dBAF|\"A\"E3F EFAF|\"G\"AB2A B2B2|\"A\"AFED \"D\"D4:|",
+    "editable": true
+  },
+  {
+    "name": "Swannanoa Waltz",
+    "key": "D",
+    "source": "",
+    "abc": "X:1\nT:Swannanoa Waltz\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "The Arkansas Traveler",
+    "key": "D",
+    "source": "https://thesession.org/tunes/5583",
+    "abc": "X:1\nT:The Arkansas Traveler\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\nB,C|:DFED B,2B,2|A,2A,2 D4|E2E2 F2F2|DFED B,2A,2|\n DFED B,2B,2|A,2A,2 D4|dcdA BdAG|1 FDEC D2B,C:|2 FDEC D2fg||\n |:agfa gfeg|fedf edce|dcdf edeg|fedf e2fg|\n agfa gfeg|fedf edce|dcdA BdAG|1 FDEC D2fg:|2 FDEC D2|",
+    "editable": true
+  },
+  {
+    "name": "The Boy In The Gap",
+    "key": "D",
+    "source": "https://thesession.org/tunes/1579",
+    "abc": "X:1\nT:The Boy In The Gap\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:D2FA dedc|A2GE cEGE|D2FA dedc|1 A2GE ~E2GE:|2 A2GE FDD2||\n |:~f3g fedf|(3efg fd ed^cA|A2(3B^cd edcd|eaag eaag|\n ~f3g fedf|egfd ed^cA|AB^cd e^cd^c|1 AFGE FDDe:|2 AFGE FAFE||",
+    "editable": true
+  },
+  {
+    "name": "The Possum's Tail Is Bare",
+    "key": "D",
+    "source": "https://thesession.org/tunes/13617",
+    "abc": "X:1\nT:The Possum's Tail Is Bare\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:DE|\"D\" F2 FF FEDF|\"G\" G2 G2 B3 B|\"D\" A2 F2 E2 D2|\"A\" [A,4E4][A,2E2] DE|\n \"D\" F2 FF FEDF|\"G\" G2 G2 B3 B|\"D\" A2 F2 \"A\" E2 C2|\"D\" D4D2:|\n |:FE|\"D\" D2 F2 A2 B2|\"C\" [E3=c3] c d2 dc|\"G\" B2 G2 Bc d2|\"A\" A3 A A2 AB/c/|\n \"D\" d2 dd dBAF|\"G\" G2 G2 B3 B|\"D\" A2 F2 \"A\" E2 C2|\"D\" D4D2:|",
+    "editable": true
+  },
+  {
+    "name": "The Spotted Pony",
+    "key": "D",
+    "source": "https://thesession.org/tunes/9927",
+    "abc": "X:1\nT:The Spotted Pony\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:D2DD E2EE|F2AF G2FG|1 ABde f2ed|f2a2 e4:|2 ABdA Bd2B|AFE2 D4||\n |:f2af e3e|efed B4|ABde f2ed|f2a2 e2de|f2af e3e|\n efed B4|1 A2BAd3A|BAF2 E4:|2 ABdABd2B|AFE2 D4||",
+    "editable": true
+  },
+  {
+    "name": "Whiskey Before Breakfast",
+    "key": "D",
+    "source": "https://thesession.org/tunes/602",
+    "abc": "X:1\nT:Whiskey Before Breakfast\nM:4/4\nL:1/8\nK:D\n%%MIDI program 40\n|:A,DFG A2 A2|ABAG FEDF|G2 BG F2 AF|EDEF EDCB,|\n A,DFG A2 A2|ABAG FEDF|G2 BG F2 AF|EDEF D4:|\n |:A d2 A d2 d2|cded cB A2|B e2 B e2 ef|gfed cABc|\n d2 fd c2 ec|BABc BAFA|G2 BG F2 AF|EDEF D4:|",
+    "editable": true
+  },
+  {
+    "name": "Banjo Pickin Girl",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Banjo Pickin Girl\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Boatman",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Boatman\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Booth Shot Lincoln",
+    "key": "A",
+    "source": "https://thesession.org/tunes/17701",
+    "abc": "X:1\nT:Booth Shot Lincoln\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\n|:\"A\"E/D/E/F/ EE/F/|\"D\"AA/B/ AA/B/|\"A\"c/B/c/B/ c/B/A|\"F#m\"(F2 F)F|\n \"A\"E/D/E/F/ EE/F/|\"D\"A/F/A/B/ Af|\"A\"ec \"E\"B/c/B|1 \"A\"A2 F2:|2 \"A\"(A2 A)B||\n |:\"A\"c(e e)e|\"D\"f(a a)f|\"A\"ec B/c/B/A/|\"F#m\"F2 FB|\n [1 \"A\"c(e e)e|\"D\"(f a) af|\"A\"ec \"E\"B/c/B|\"A\"A2 AB:|\n [2 \"A\"E/D/E/F/ E E/F/|\"D\"A/F/A/B/ Af|\"A\"ec \"E\" B/c/B|\"A\"A4||",
+    "editable": true
+  },
+  {
+    "name": "Candy Girl",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Candy Girl\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Chinquapin Hunting",
+    "key": "A",
+    "source": "https://thesession.org/tunes/15454",
+    "abc": "X:1\nT:Chinquapin Hunting\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\n|:\"A\"e3e|\"D\"fec2|\"A\"e3e|\"D\"fecd|\"A\"e3e|\"D\"fefg|\"A\"abaf|\"E\"efed|\"A\"cBA2:|\n |:\"A\"a3a|a2g2|\"D\"f3f|f4|\"A\"a3a|fgaf|\"E\"efed|\"A\"cBA2:|\n \"D\"f3e|fec2|\"E\"B3B|B4|\"D\"fefg|f2fg|\"E\"efed|\"A\"cBA2|\n \"D\"f3e|fec2|\"E\"B3B|B4|\"D\"fefg|a2af|\n \"E\"efed|\"A\"cBA2||",
+    "editable": true
+  },
+  {
+    "name": "Cluck Old Hen",
+    "key": "A",
+    "source": "https://thesession.org/tunes/10006",
+    "abc": "X:1\nT:Cluck Old Hen\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\n|:e2ae g2ag|e2ae d2dd|e2ae g2ag|edc2 A2AA:|\n |:A2A2 [c4e4]|A2A2 [G4B4]|A2AA cAcd|edc2 A2AA:|",
+    "editable": true
+  },
+  {
+    "name": "Goin to the Free State",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Goin to the Free State\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Gray Eagle",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Gray Eagle\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Greasy Coat",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Greasy Coat\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Greenback Dolio",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Greenback Dolio\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Greenback Dolly-O",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Greenback Dolly-O\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Gunboat",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Gunboat\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Ida Red",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Ida Red\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "John Hardy",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:John Hardy\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "June Apple",
+    "key": "A",
+    "source": "https://thesession.org/tunes/7237",
+    "abc": "X:1\nT:June Apple\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\n|:ageg ageg|aged c2A2|gfef gfef|gfed c2A2|\n ageg ageg|aged c2A2|~G3A BAGB|1 ~A3G A2eg:|2 ~A3G A2AB||\n |:cdcB ~A3B|c2d2 e2A2|~G3A BABc|d2d2 e3d|\n cdcB ~A3B|c2d2 e2A2|~G3A BAGB|1 ~A3G A2AB:|2 ~A3G A2eg||",
+    "editable": true
+  },
+  {
+    "name": "Old Liza Jane",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Old Liza Jane\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Red Rocking Chair",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Red Rocking Chair\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  },
+  {
+    "name": "Sandy Boys",
+    "key": "A",
+    "source": "https://thesession.org/tunes/23744",
+    "abc": "X:1\nT:Sandy Boys\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\n|:ag eg e/d/c A2|ag eg a2ae/g/|\n ag eg e/d/c AA/B/|1 cc/e/ d/c/B AA-Ag:|2 cc/e/ d/c/B AA-A/B/c/d/||\n |:e2e2 d<c A2|cc/e/ d/c/A/B/ cc/e/ d/c/A|\n e2e2 d<c A2|1 cc/e/ d/c/B AA-A/B/c/d/:|2 cc/e/ d/c/B AA-A2||",
+    "editable": true
+  },
+  {
+    "name": "Waterbound",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:Waterbound\nM:4/4\nL:1/8\nK:A\n%%MIDI program 40\nz8|z8|z8|z8|",
+    "editable": true,
+    "needsAbc": true
+  }
+]
