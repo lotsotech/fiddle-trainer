@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.11</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.12</div>
 </header>
 
 <div class="container">
@@ -559,7 +559,9 @@ async function loadTunesFromFile() {
       if (t.editable) { t._editable = true; delete t.editable; }
       if (t.needsAbc) { t._needsAbc = true; delete t.needsAbc; }
     });
-    TUNES = data;
+    // Filter out previously deleted tunes
+    const deleted = JSON.parse(localStorage.getItem('fiddleTrainer_deletedTunes') || '[]');
+    TUNES = data.filter(t => !deleted.includes(t.name));
     // Cache for offline use
     try { localStorage.setItem('fiddleTrainer_tunesCache', JSON.stringify(data)); } catch (e) {}
   } catch (e) {
@@ -669,9 +671,9 @@ function updateDeleteButton() {
   const btnDel = document.getElementById('btnDeleteTune');
   const btnEdit = document.getElementById('btnEditTune');
   const tune = TUNES[currentTuneIndex];
-  const isCustom = tune && tune._custom;
+  const isDeletable = tune && (tune._custom || tune._editable);
   const isEditable = tune && (tune._custom || tune._editable);
-  btnDel.style.display = isCustom ? 'inline-block' : 'none';
+  btnDel.style.display = isDeletable ? 'inline-block' : 'none';
   btnEdit.style.display = isEditable ? 'inline-block' : 'none';
 }
 
@@ -766,8 +768,17 @@ function saveCustomTune() {
 
 function deleteCustomTune() {
   const tune = TUNES[currentTuneIndex];
-  if (!tune || !tune._custom) return;
+  if (!tune || !(tune._custom || tune._editable)) return;
   if (!confirm(`Delete "${tune.name}"?`)) return;
+
+  // Track deleted editable tunes so they stay hidden on reload
+  if (tune._editable && !tune._custom) {
+    const deleted = JSON.parse(localStorage.getItem('fiddleTrainer_deletedTunes') || '[]');
+    if (!deleted.includes(tune.name)) {
+      deleted.push(tune.name);
+      localStorage.setItem('fiddleTrainer_deletedTunes', JSON.stringify(deleted));
+    }
+  }
 
   TUNES.splice(currentTuneIndex, 1);
   saveCustomTunesToStorage();
