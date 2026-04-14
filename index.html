@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.1</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.2</div>
 </header>
 
 <div class="container">
@@ -1319,10 +1319,7 @@ let synthController = null;
 
 function stopPreview() {
   // Stop synth controller
-  if (synthController) {
-    try { synthController.pause(); } catch (e) { console.log('synth controller pause:', e); }
-  }
-  // Stop ABCJS synth (fallback)
+  // Stop ABCJS synth
   if (previewSynth) {
     try { previewSynth.stop(); } catch (e) { console.log('synth stop:', e); }
     previewSynth = null;
@@ -1405,35 +1402,28 @@ async function previewFullTune() {
       }
     };
 
-    // Use SynthController for synced playback + highlighting
-    if (!synthController) {
-      synthController = new ABCJS.synth.SynthController();
-      synthController.load('#synthControl', cursorControl, {
-        displayLoop: false,
-        displayRestart: false,
-        displayPlay: false,
-        displayProgress: false,
-        displayWarp: false
-      });
-    } else {
-      synthController.load('#synthControl', cursorControl, {
-        displayLoop: false,
-        displayRestart: false,
-        displayPlay: false,
-        displayProgress: false,
-        displayWarp: false
-      });
-    }
-
-    await synthController.setTune(visualObj[0], false, {
-      program: 40,
-      soundFontVolumeMultiplier: 1.5,
-      chordsOff: true,
-      qpm: tempo,
+    // Use CreateSynth + TimingCallbacks for tempo-aware playback
+    previewSynth = new ABCJS.synth.CreateSynth();
+    await previewSynth.init({
+      audioContext: audioCtx,
+      visualObj: visualObj[0],
+      options: {
+        program: 40,
+        soundFontVolumeMultiplier: 1.5,
+        chordsOff: true
+      },
       millisecondsPerMeasure: (60 / tempo) * 4 * 1000
     });
+    await previewSynth.prime();
 
-    synthController.play();
+    previewTimingCallbacks = new ABCJS.TimingCallbacks(visualObj[0], {
+      qpm: tempo,
+      eventCallback: cursorControl.onEvent,
+      beatSubdivisions: 2
+    });
+
+    previewSynth.start();
+    previewTimingCallbacks.start();
 
   } catch (e) {
     console.error('ABCJS synth preview error:', e);
