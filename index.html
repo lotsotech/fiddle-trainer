@@ -1207,7 +1207,10 @@ async function playPhrase() {
 
       const noteMidis = n.midis || [n.midi];
       for (const m of noteMidis) {
-        player.queueWaveTable(audioCtx, audioCtx.destination, violinPreset, time, m, dur * 0.9, 1.0);
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = noteMidis.length > 1 ? 0.7 : 1.0;
+        gainNode.connect(audioCtx.destination);
+        player.queueWaveTable(audioCtx, gainNode, violinPreset, time, m, dur * 0.9, 1.0);
       }
       time += dur;
     });
