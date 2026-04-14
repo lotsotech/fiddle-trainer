@@ -464,7 +464,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.50</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.51</div>
 </header>
 
 <div class="container">
@@ -685,7 +685,7 @@ function editCustomTune() {
   document.getElementById('modalTuneName').value = tune.name;
   document.getElementById('modalTuneKey').value = tune.key;
   document.getElementById('modalTuneSource').value = tune.source || '';
-  document.getElementById('modalTuneAbc').value = tune.abc;
+  document.getElementById('modalTuneABC').value = tune.abc;
 
   // Mark modal as editing
   const modal = document.getElementById('addTuneModal');
@@ -713,7 +713,7 @@ function saveCustomTune() {
   const name = document.getElementById('modalTuneName').value.trim();
   const key = document.getElementById('modalTuneKey').value.trim() || 'C';
   const source = document.getElementById('modalTuneSource').value.trim();
-  const abc = document.getElementById('modalTuneAbc') ? document.getElementById('modalTuneAbc').value.trim() : document.getElementById('modalTuneABC').value.trim();
+  const abc = document.getElementById('modalTuneABC') ? document.getElementById('modalTuneABC').value.trim() : document.getElementById('modalTuneABC').value.trim();
   const errorEl = document.getElementById('modalError');
 
   if (!name) { errorEl.textContent = 'Tune name is required.'; return; }
