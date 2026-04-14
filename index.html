@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.12</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.13</div>
 </header>
 
 <div class="container">
@@ -1341,7 +1341,10 @@ let synthController = null;
 
 function stopPreview() {
   // Stop synth controller
-  // Stop ABCJS synth
+  if (synthController) {
+    try { synthController.pause(); } catch (e) { console.log('synth controller pause:', e); }
+  }
+  // Stop ABCJS synth (fallback)
   if (previewSynth) {
     try { previewSynth.stop(); } catch (e) { console.log('synth stop:', e); }
     previewSynth = null;
@@ -1424,28 +1427,41 @@ async function previewFullTune() {
       }
     };
 
-    // Use CreateSynth + TimingCallbacks for tempo-aware playback
-    previewSynth = new ABCJS.synth.CreateSynth();
-    await previewSynth.init({
-      audioContext: audioCtx,
-      visualObj: visualObj[0],
-      options: {
-        program: 40,
-        soundFontVolumeMultiplier: 1.5,
-        chordsOff: true
-      },
-      millisecondsPerMeasure: getMillisecondsPerMeasure()
-    });
-    await previewSynth.prime();
-
-    previewTimingCallbacks = new ABCJS.TimingCallbacks(visualObj[0], {
-      qpm: tempo,
-      eventCallback: cursorControl.onEvent,
-      beatSubdivisions: 2
+    // Re-render with tempo injected into ABC so SynthController uses it
+    const tune = TUNES[currentTuneIndex];
+    let previewAbc = tune.abc;
+    // Inject Q: tempo directive after K: line if not present
+    if (!previewAbc.match(/Q:/)) {
+      previewAbc = previewAbc.replace(/(K:[^\n]*\n)/, `$1Q:1/4=${tempo}\n`);
+    }
+    // Render offscreen for the synth (with tempo)
+    const offDiv = document.createElement('div');
+    offDiv.id = 'offscreen-preview';
+    offDiv.style.cssText = 'position:absolute;left:-9999px;top:-9999px;';
+    document.body.appendChild(offDiv);
+    const previewVisualObj = ABCJS.renderAbc('offscreen-preview', previewAbc, {
+      responsive: 'resize', add_classes: true
     });
 
-    previewSynth.start();
-    previewTimingCallbacks.start();
+    // Use SynthController for synced playback + highlighting
+    if (!synthController) {
+      synthController = new ABCJS.synth.SynthController();
+    }
+    synthController.load('#synthControl', cursorControl, {
+      displayLoop: false, displayRestart: false,
+      displayPlay: false, displayProgress: false, displayWarp: false
+    });
+
+    await synthController.setTune(previewVisualObj[0], false, {
+      program: 40,
+      soundFontVolumeMultiplier: 1.5,
+      chordsOff: true
+    });
+
+    // Map offscreen elements to onscreen elements for highlighting
+    // SynthController handles repeat sync internally
+    synthController.play();
+    document.body.removeChild(offDiv);
 
   } catch (e) {
     console.error('ABCJS synth preview error:', e);
