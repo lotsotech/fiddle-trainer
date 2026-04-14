@@ -469,6 +469,7 @@ header h1 span { color: var(--accent); }
   <div class="controls">
     <select id="tuneSelect"></select>
     <button class="btn-add-tune" id="btnAddTune" onclick="openAddTuneModal()">+ Add Tune</button>
+    <button class="btn-delete-tune" id="btnEditTune" style="display:none;" onclick="editCustomTune()">Edit</button>
     <button class="btn-delete-tune" id="btnDeleteTune" style="display:none;" onclick="deleteCustomTune()">Delete</button>
     <div class="key-badge" id="keyBadge">D</div>
     <select id="violinSelect" style="background:var(--bg3);color:var(--text);border:none;border-radius:6px;padding:6px 10px;font-size:0.85rem;">
@@ -668,12 +669,26 @@ function rebuildTuneSelector() {
 }
 
 function updateDeleteButton() {
-  const btn = document.getElementById('btnDeleteTune');
-  if (TUNES[currentTuneIndex] && TUNES[currentTuneIndex]._custom) {
-    btn.style.display = 'inline-block';
-  } else {
-    btn.style.display = 'none';
-  }
+  const btnDel = document.getElementById('btnDeleteTune');
+  const btnEdit = document.getElementById('btnEditTune');
+  const isCustom = TUNES[currentTuneIndex] && TUNES[currentTuneIndex]._custom;
+  btnDel.style.display = isCustom ? 'inline-block' : 'none';
+  btnEdit.style.display = isCustom ? 'inline-block' : 'none';
+}
+
+function editCustomTune() {
+  const tune = TUNES[currentTuneIndex];
+  if (!tune || !tune._custom) return;
+
+  document.getElementById('modalTuneName').value = tune.name;
+  document.getElementById('modalTuneKey').value = tune.key;
+  document.getElementById('modalTuneSource').value = tune.source || '';
+  document.getElementById('modalTuneAbc').value = tune.abc;
+
+  // Mark modal as editing
+  const modal = document.getElementById('addTuneModal');
+  modal.dataset.editIndex = currentTuneIndex;
+  modal.style.display = 'flex';
 }
 
 function openAddTuneModal() {
@@ -686,31 +701,54 @@ function openAddTuneModal() {
 }
 
 function closeAddTuneModal() {
-  document.getElementById('addTuneModal').classList.remove('open');
+  const modal = document.getElementById('addTuneModal');
+  modal.classList.remove('open');
+  modal.style.display = 'none';
+  delete modal.dataset.editIndex;
 }
 
 function saveCustomTune() {
   const name = document.getElementById('modalTuneName').value.trim();
   const key = document.getElementById('modalTuneKey').value.trim() || 'C';
   const source = document.getElementById('modalTuneSource').value.trim();
-  const abc = document.getElementById('modalTuneABC').value.trim();
+  const abc = document.getElementById('modalTuneAbc') ? document.getElementById('modalTuneAbc').value.trim() : document.getElementById('modalTuneABC').value.trim();
   const errorEl = document.getElementById('modalError');
 
   if (!name) { errorEl.textContent = 'Tune name is required.'; return; }
   if (!abc) { errorEl.textContent = 'ABC notation is required.'; return; }
 
-  const newTune = { name, key, source: source || '', abc, _custom: true };
-  TUNES.push(newTune);
-  saveCustomTunesToStorage();
-  rebuildTuneSelector();
+  const modal = document.getElementById('addTuneModal');
+  const editIndex = modal.dataset.editIndex;
 
-  const newIndex = TUNES.length - 1;
-  tuneSelect.value = newIndex;
-  currentTuneIndex = newIndex;
-  loadTune();
-  updateDeleteButton();
-  closeAddTuneModal();
-  setStatus(`Added custom tune "${name}".`);
+  if (editIndex !== undefined && editIndex !== '') {
+    // Editing existing tune
+    const idx = parseInt(editIndex);
+    TUNES[idx].name = name;
+    TUNES[idx].key = key;
+    TUNES[idx].source = source || '';
+    TUNES[idx].abc = abc;
+    saveCustomTunesToStorage();
+    rebuildTuneSelector();
+    tuneSelect.value = idx;
+    currentTuneIndex = idx;
+    loadTune();
+    updateDeleteButton();
+    closeAddTuneModal();
+    setStatus(`Updated "${name}".`);
+  } else {
+    // Adding new tune
+    const newTune = { name, key, source: source || '', abc, _custom: true };
+    TUNES.push(newTune);
+    saveCustomTunesToStorage();
+    rebuildTuneSelector();
+    const newIndex = TUNES.length - 1;
+    tuneSelect.value = newIndex;
+    currentTuneIndex = newIndex;
+    loadTune();
+    updateDeleteButton();
+    closeAddTuneModal();
+    setStatus(`Added custom tune "${name}".`);
+  }
 }
 
 function deleteCustomTune() {
