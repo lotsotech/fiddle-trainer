@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.4</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.5</div>
 </header>
 
 <div class="container">
@@ -518,6 +518,7 @@ header h1 span { color: var(--accent); }
     <button class="btn btn-play" id="btnPlay" disabled>&#9654; Play Phrase</button>
     <button class="btn btn-record" id="btnRecord" disabled>&#9679; Record</button>
     <button class="btn btn-next" id="btnNext" disabled>Next &#9654;</button>
+    <button class="btn" id="btnSkip" style="background:#666;">Skip &#9654;&#9654;</button>
     <button class="btn" id="btnRestart" style="background:#555;">&#8634; Start Over</button>
   </div>
 
@@ -915,6 +916,10 @@ async function init() {
   btnPlay.addEventListener('click', () => playPhrase());
   btnRecord.addEventListener('click', toggleRecord);
   btnNext.addEventListener('click', nextPhrase);
+  document.getElementById('btnSkip').addEventListener('click', () => {
+    stopRecording();
+    nextPhrase();
+  });
   document.getElementById('btnRestart').addEventListener('click', () => {
     stopRecording();
     currentPhraseIndex = 0;
