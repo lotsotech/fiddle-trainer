@@ -467,7 +467,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.2</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.57.3</div>
 </header>
 
 <div class="container">
@@ -1278,7 +1278,7 @@ async function playPhrase() {
         soundFontVolumeMultiplier: 1.5,
         chordsOff: true
       },
-      millisecondsPerMeasure: (60 / tempo) * 4 * 1000
+      millisecondsPerMeasure: getMillisecondsPerMeasure()
     });
     await phraseSynth.prime();
 
@@ -1412,7 +1412,7 @@ async function previewFullTune() {
         soundFontVolumeMultiplier: 1.5,
         chordsOff: true
       },
-      millisecondsPerMeasure: (60 / tempo) * 4 * 1000
+      millisecondsPerMeasure: getMillisecondsPerMeasure()
     });
     await previewSynth.prime();
 
@@ -1434,6 +1434,26 @@ async function previewFullTune() {
     btnRecord.disabled = false;
     setStatus('Preview error: ' + e.message);
   }
+}
+
+function getMillisecondsPerMeasure() {
+  // Parse time signature from current tune's ABC to get beats per measure
+  const tune = TUNES[currentTuneIndex];
+  if (!tune) return (60000 / tempo) * 4;
+  const abc = tune.abc || '';
+  let beatsPerMeasure = 4; // default 4/4
+  const mMatch = abc.match(/M:\s*(\d+)\/(\d+)/);
+  const mCut = abc.match(/M:\s*C\|/);
+  if (mCut) {
+    beatsPerMeasure = 2; // cut time = 2 half-note beats, but quarter note is still the BPM base
+    return (60000 / tempo) * 4; // 4 quarter notes per measure in cut time
+  } else if (mMatch) {
+    const numerator = parseInt(mMatch[1]);
+    const denominator = parseInt(mMatch[2]);
+    // BPM is always quarter notes. Beats per measure in quarter notes:
+    beatsPerMeasure = numerator * (4 / denominator);
+  }
+  return (60000 / tempo) * beatsPerMeasure;
 }
 
 function buildPhraseAbc() {
