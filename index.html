@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://paulrosen.github.io https://gleitz.github.io blob: data:; media-src 'self' blob: data:; connect-src 'self' https://paulrosen.github.io https://gleitz.github.io;">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fiddle Ear Trainer</title>
 <script src="abcjs-basic-min.js"></script>
@@ -467,7 +468,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.2</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.3</div>
 </header>
 
 <div class="container">
@@ -707,15 +708,47 @@ function closeAddTuneModal() {
   delete modal.dataset.editIndex;
 }
 
+function sanitizeText(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function validateAbc(abc) {
+  // Reject anything that looks like HTML/JS injection
+  const dangerous = /<script|<\/script|javascript:|on\w+\s*=|<iframe|<object|<embed|<link|<style/i;
+  if (dangerous.test(abc)) return false;
+  // Reject HTML tags
+  if (/<[a-zA-Z][^>]*>/.test(abc)) return false;
+  return true;
+}
+
 function saveCustomTune() {
-  const name = document.getElementById('modalTuneName').value.trim();
-  const key = document.getElementById('modalTuneKey').value.trim() || 'C';
-  const source = document.getElementById('modalTuneSource').value.trim();
+  let name = document.getElementById('modalTuneName').value.trim();
+  let key = document.getElementById('modalTuneKey').value.trim() || 'C';
+  let source = document.getElementById('modalTuneSource').value.trim();
   let abc = document.getElementById('modalTuneABC') ? document.getElementById('modalTuneABC').value.trim() : document.getElementById('modalTuneABC').value.trim();
   const errorEl = document.getElementById('modalError');
 
   if (!name) { errorEl.textContent = 'Tune name is required.'; return; }
   if (!abc) { errorEl.textContent = 'ABC notation is required.'; return; }
+
+  // Sanitize inputs
+  name = sanitizeText(name);
+  key = sanitizeText(key);
+  source = sanitizeText(source);
+
+  // Validate ABC notation
+  if (!validateAbc(abc)) {
+    errorEl.textContent = 'ABC notation contains invalid content. HTML and scripts are not allowed.';
+    return;
+  }
+
+  // Validate source URL if provided
+  if (source && !source.match(/^https?:\/\//i) && source.length > 0) {
+    errorEl.textContent = 'Source URL must start with http:// or https://';
+    return;
+  }
 
   // Auto-inject %%MIDI program 40 if not already present
   if (!abc.includes('%%MIDI program 40')) {
