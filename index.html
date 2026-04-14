@@ -937,6 +937,25 @@ function loadTune() {
     }
   });
 
+  // Debug: dump bar types and ending info
+  if (visualObj && visualObj[0]) {
+    const debugLines = visualObj[0].lines;
+    let debugMeasure = 0;
+    console.log(`[loadTune] Bar structure for "${tune.name}":`);
+    for (const line of debugLines) {
+      if (!line.staff) continue;
+      for (const staff of line.staff) {
+        if (!staff.voices || !staff.voices[0]) continue;
+        for (const elem of staff.voices[0]) {
+          if (elem.el_type === 'bar') {
+            console.log(`  measure ${debugMeasure}: type=${elem.type}, startEnding=${elem.startEnding || 'none'}, endEnding=${elem.endEnding || 'none'}`);
+            debugMeasure++;
+          }
+        }
+      }
+    }
+  }
+
   // Calculate total phrases based on measure count
   const totalMeasures = countMeasures();
   totalPhrases = Math.ceil(totalMeasures / phraseLength);
@@ -1243,6 +1262,173 @@ function stopPreview() {
   setStatus('Preview stopped. Press Play to practice a phrase.');
 }
 
+// ============================================================
+// BUILD PLAYBACK SEQUENCE - handles repeats & volta brackets
+// ============================================================
+function buildPlaybackSequence() {
+  if (!visualObj || !visualObj[0]) return [];
+
+  // First pass: collect notes into measures, tracking bar types and endings
+  const measures = []; // each: { notes: [{midis, duration}], ending: null|"1"|"2"|"3" }
+  let currentMeasure = { notes: [], ending: null };
+  const barInfos = []; // barInfo per measure boundary: { type, startEnding, endEnding }
+  let currentEnding = null;
+
+  const lines = visualObj[0].lines;
+
+  for (const line of lines) {
+    if (!line.staff) continue;
+    for (const staff of line.staff) {
+      if (!staff.voices || !staff.voices[0]) continue;
+      const voice = staff.voices[0];
+      for (const elem of voice) {
+        if (elem.el_type === 'bar') {
+          // Track ending state changes
+          if (elem.startEnding) {
+            currentEnding = elem.startEnding;
+          }
+
+          // Finalize current measure
+          currentMeasure.ending = currentEnding;
+          measures.push(currentMeasure);
+          barInfos.push({
+            type: elem.type || 'bar_thin',
+            startEnding: elem.startEnding || null,
+            endEnding: elem.endEnding || null
+          });
+
+          if (elem.endEnding) {
+            currentEnding = null;
+          }
+
+          currentMeasure = { notes: [], ending: currentEnding };
+          continue;
+        }
+        if (elem.el_type === 'note' && elem.pitches) {
+          const midis = [];
+          for (const p of elem.pitches) {
+            const midi = abcjsPitchToMidi(p);
+            if (midi > 0) midis.push(midi);
+          }
+          if (midis.length > 0) {
+            const duration = elem.duration || 0.125;
+            currentMeasure.notes.push({ midis, duration });
+          }
+        }
+      }
+    }
+  }
+  // Push final measure if it has notes
+  if (currentMeasure.notes.length > 0) {
+    currentMeasure.ending = currentEnding;
+    measures.push(currentMeasure);
+    barInfos.push({ type: 'bar_thin_thick', startEnding: null, endEnding: null });
+  }
+
+  console.log('[buildPlaybackSequence] Measures:', measures.length);
+  console.log('[buildPlaybackSequence] Bar infos:', barInfos.map((b, i) =>
+    `m${i}: type=${b.type}${b.startEnding ? ' startEnding=' + b.startEnding : ''}${b.endEnding ? ' endEnding=' + b.endEnding : ''} ending=${measures[i]?.ending || 'none'} notes=${measures[i]?.notes.length || 0}`
+  ));
+
+  // Second pass: build playback sequence respecting repeats and volta brackets
+  //
+  // Strategy: walk through measures linearly. Track where repeat sections start.
+  // When we hit a right repeat bar, jump back. Use repeatPass to track which
+  // pass we're on (0=first, 1=second, 2=third) for volta bracket filtering.
+  const playback = [];
+  let i = 0;
+  let repeatStartIndex = 0; // where to go back on right repeat
+  let repeatPass = 0; // 0 = first time through, 1 = second, 2 = third
+  const MAX_ITERATIONS = measures.length * 10; // safety valve
+  let iterations = 0;
+
+  while (i < measures.length && iterations < MAX_ITERATIONS) {
+    iterations++;
+    const bar = barInfos[i];
+    const measure = measures[i];
+
+    // Handle bar_left_repeat: marks the start of a repeated section
+    if (bar.type === 'bar_left_repeat') {
+      repeatStartIndex = i;
+      repeatPass = 0;
+    }
+
+    // Handle bar_left_right_repeat (:|:): end of one repeat section, start of next
+    // This acts as right-repeat THEN left-repeat
+    if (bar.type === 'bar_left_right_repeat') {
+      if (repeatPass === 0) {
+        // First time reaching :|: -- treat as right repeat: jump back
+        repeatPass = 1;
+        i = repeatStartIndex;
+        continue;
+      } else {
+        // We've completed the repeat. Now this becomes the start of the next section.
+        repeatStartIndex = i;
+        repeatPass = 0;
+      }
+    }
+
+    // Determine if we should play this measure based on volta bracket
+    const ending = measure.ending;
+    let shouldPlay = true;
+
+    if (ending) {
+      // Parse ending - can be "1", "2", "3", "1, 2", etc.
+      const endingNumbers = ending.replace(/\s/g, '').split(',').map(Number);
+      const currentPass = repeatPass + 1; // 1-indexed
+      shouldPlay = endingNumbers.includes(currentPass);
+    }
+
+    if (shouldPlay) {
+      for (const note of measure.notes) {
+        playback.push(note);
+      }
+    }
+
+    // Check for right repeat (not :|: which is handled above)
+    if (bar.type === 'bar_right_repeat') {
+      if (repeatPass === 0) {
+        // First time: go back for second pass
+        repeatPass = 1;
+        i = repeatStartIndex;
+        continue;
+      } else {
+        // Check if there are more endings that need additional passes
+        // Look ahead from repeatStartIndex to find max ending number
+        let maxEnding = 2; // default: repeats play twice
+        for (let j = repeatStartIndex; j <= i; j++) {
+          if (measures[j].ending) {
+            const nums = measures[j].ending.replace(/\s/g, '').split(',').map(Number);
+            for (const n of nums) {
+              if (n > maxEnding) maxEnding = n;
+            }
+          }
+        }
+
+        if (repeatPass + 1 < maxEnding) {
+          // Need more passes (e.g., 3rd ending exists)
+          repeatPass++;
+          i = repeatStartIndex;
+          continue;
+        }
+
+        // Done with this repeated section
+        repeatPass = 0;
+        repeatStartIndex = i + 1;
+      }
+    }
+
+    i++;
+  }
+
+  if (iterations >= MAX_ITERATIONS) {
+    console.warn('[buildPlaybackSequence] Hit iteration limit - possible infinite loop');
+  }
+
+  console.log(`[buildPlaybackSequence] Total playback notes: ${playback.length} (from ${measures.length} measures)`);
+  return playback;
+}
+
 async function previewFullTune() {
   if (isRecording) return;
   await ensureAudioCtx();
@@ -1257,31 +1443,7 @@ async function previewFullTune() {
     return;
   }
 
-  const allNotes = [];
-  const lines = visualObj[0].lines;
-  let measureIndex = 0;
-
-  for (const line of lines) {
-    if (!line.staff) continue;
-    for (const staff of line.staff) {
-      if (!staff.voices || !staff.voices[0]) continue;
-      const voice = staff.voices[0];
-      for (const elem of voice) {
-        if (elem.el_type === 'bar') { measureIndex++; continue; }
-        if (elem.el_type === 'note' && elem.pitches) {
-          const midis = [];
-          for (const p of elem.pitches) {
-            const midi = abcjsPitchToMidi(p);
-            if (midi > 0) midis.push(midi);
-          }
-          if (midis.length > 0) {
-            const duration = elem.duration || 0.125;
-            allNotes.push({ midis, duration });
-          }
-        }
-      }
-    }
-  }
+  const allNotes = buildPlaybackSequence();
 
   if (allNotes.length === 0) {
     setStatus('No notes found in tune.');
