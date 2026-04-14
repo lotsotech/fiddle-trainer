@@ -334,6 +334,129 @@ header h1 span { color: var(--accent); }
   .note-cell { width: 44px; height: 44px; font-size: 0.95rem; }
   .btn { padding: 12px 22px; font-size: 1rem; }
 }
+
+/* Add Tune Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--accent2);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal h2 {
+  font-size: 1.3rem;
+  color: var(--accent);
+  margin: 0;
+}
+
+.modal label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal input[type="text"],
+.modal textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--bg3);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.modal input[type="text"]:focus,
+.modal textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modal textarea {
+  min-height: 160px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.modal .modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modal .modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.modal .modal-buttons button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #fff;
+}
+
+.modal .btn-save { background: var(--accent); }
+.modal .btn-save:hover { background: #d63050; }
+.modal .btn-cancel { background: #555; }
+.modal .btn-cancel:hover { background: #666; }
+
+.modal .modal-error {
+  color: var(--red);
+  font-size: 0.85rem;
+  min-height: 20px;
+}
+
+.btn-add-tune {
+  background: var(--accent2);
+  color: #fff;
+  font-size: 0.9rem;
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-add-tune:hover { background: #6a40a0; }
+
+.btn-delete-tune {
+  background: var(--red);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-delete-tune:hover { background: #cc1133; }
 </style>
 </head>
 <body>
@@ -345,6 +468,8 @@ header h1 span { color: var(--accent); }
 <div class="container">
   <div class="controls">
     <select id="tuneSelect"></select>
+    <button class="btn-add-tune" id="btnAddTune" onclick="openAddTuneModal()">+ Add Tune</button>
+    <button class="btn-delete-tune" id="btnDeleteTune" style="display:none;" onclick="deleteCustomTune()">Delete</button>
     <div class="key-badge" id="keyBadge">D</div>
     <select id="violinSelect" style="background:var(--bg3);color:var(--text);border:none;border-radius:6px;padding:6px 10px;font-size:0.85rem;">
       <option value="JCLive">JCLive Violin</option>
@@ -508,6 +633,114 @@ af ed/e/|fe dd/e/|fe dB|A>B A:|`
 ];
 
 // ============================================================
+// CUSTOM TUNES - localStorage persistence
+// ============================================================
+const BUILTIN_TUNE_COUNT = TUNES.length;
+
+function loadCustomTunes() {
+  try {
+    const stored = localStorage.getItem('fiddleTrainer_customTunes');
+    if (stored) {
+      const customs = JSON.parse(stored);
+      customs.forEach(t => {
+        t._custom = true;
+        TUNES.push(t);
+      });
+    }
+  } catch (e) {
+    console.warn('Failed to load custom tunes:', e);
+  }
+}
+
+function saveCustomTunesToStorage() {
+  const customs = TUNES.filter(t => t._custom);
+  localStorage.setItem('fiddleTrainer_customTunes', JSON.stringify(customs));
+}
+
+function rebuildTuneSelector() {
+  tuneSelect.innerHTML = '';
+  TUNES.forEach((t, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${t.name} (${t.key})`;
+    tuneSelect.appendChild(opt);
+  });
+}
+
+function updateDeleteButton() {
+  const btn = document.getElementById('btnDeleteTune');
+  if (TUNES[currentTuneIndex] && TUNES[currentTuneIndex]._custom) {
+    btn.style.display = 'inline-block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+function openAddTuneModal() {
+  document.getElementById('modalTuneName').value = '';
+  document.getElementById('modalTuneKey').value = '';
+  document.getElementById('modalTuneSource').value = '';
+  document.getElementById('modalTuneABC').value = '';
+  document.getElementById('modalError').textContent = '';
+  document.getElementById('addTuneModal').classList.add('open');
+}
+
+function closeAddTuneModal() {
+  document.getElementById('addTuneModal').classList.remove('open');
+}
+
+function saveCustomTune() {
+  const name = document.getElementById('modalTuneName').value.trim();
+  const key = document.getElementById('modalTuneKey').value.trim() || 'C';
+  const source = document.getElementById('modalTuneSource').value.trim();
+  const abc = document.getElementById('modalTuneABC').value.trim();
+  const errorEl = document.getElementById('modalError');
+
+  if (!name) { errorEl.textContent = 'Tune name is required.'; return; }
+  if (!abc) { errorEl.textContent = 'ABC notation is required.'; return; }
+
+  const newTune = { name, key, source: source || '', abc, _custom: true };
+  TUNES.push(newTune);
+  saveCustomTunesToStorage();
+  rebuildTuneSelector();
+
+  const newIndex = TUNES.length - 1;
+  tuneSelect.value = newIndex;
+  currentTuneIndex = newIndex;
+  loadTune();
+  updateDeleteButton();
+  closeAddTuneModal();
+  setStatus(`Added custom tune "${name}".`);
+}
+
+function deleteCustomTune() {
+  const tune = TUNES[currentTuneIndex];
+  if (!tune || !tune._custom) return;
+  if (!confirm(`Delete "${tune.name}"?`)) return;
+
+  TUNES.splice(currentTuneIndex, 1);
+  saveCustomTunesToStorage();
+  rebuildTuneSelector();
+
+  currentTuneIndex = 0;
+  tuneSelect.value = 0;
+  loadTune();
+  updateDeleteButton();
+  setStatus(`Deleted "${tune.name}".`);
+}
+
+// Close modal on overlay click or Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeAddTuneModal();
+});
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'addTuneModal') closeAddTuneModal();
+});
+
+// Load custom tunes immediately
+loadCustomTunes();
+
+// ============================================================
 // APP STATE
 // ============================================================
 let audioCtx = null;
@@ -586,16 +819,12 @@ function centsDiff(freq, targetMidi) {
 // INIT
 // ============================================================
 function init() {
-  TUNES.forEach((t, i) => {
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = `${t.name} (${t.key})`;
-    tuneSelect.appendChild(opt);
-  });
+  rebuildTuneSelector();
 
   tuneSelect.addEventListener('change', () => {
     currentTuneIndex = parseInt(tuneSelect.value);
     loadTune();
+    updateDeleteButton();
   });
 
   tempoSlider.addEventListener('input', () => {
@@ -632,6 +861,7 @@ function init() {
   });
 
   loadTune();
+  updateDeleteButton();
   setStatus('Select a tune and press Play to begin.');
 }
 
@@ -1398,6 +1628,38 @@ function setStatus(msg) {
 // ============================================================
 init();
 </script>
+<div class="modal-overlay" id="addTuneModal">
+  <div class="modal">
+    <h2>Add Custom Tune</h2>
+    <div class="modal-field">
+      <label>Tune Name *</label>
+      <input type="text" id="modalTuneName" placeholder="e.g. Red Haired Boy">
+    </div>
+    <div class="modal-field">
+      <label>Key</label>
+      <input type="text" id="modalTuneKey" placeholder="e.g. D, G, A Mix">
+    </div>
+    <div class="modal-field">
+      <label>Source URL (optional)</label>
+      <input type="text" id="modalTuneSource" placeholder="https://thesession.org/tunes/...">
+    </div>
+    <div class="modal-field">
+      <label>ABC Notation *</label>
+      <textarea id="modalTuneABC" placeholder="X:1
+T:Tune Name
+M:4/4
+L:1/8
+K:D
+|:notes here:|"></textarea>
+    </div>
+    <div class="modal-error" id="modalError"></div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" onclick="closeAddTuneModal()">Cancel</button>
+      <button class="btn-save" onclick="saveCustomTune()">Save</button>
+    </div>
+  </div>
+</div>
+
 <footer style="text-align:center;padding:20px 10px;color:var(--text-dim);font-size:0.75rem;">&copy; 2026 Greg Hurst. All Rights Reserved.</footer>
 </body>
 </html>
