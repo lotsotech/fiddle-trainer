@@ -468,7 +468,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.9</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.10</div>
 </header>
 
 <div class="container">
@@ -1339,8 +1339,20 @@ async function playPhrase() {
   setStatus('Playing phrase...');
 
   try {
-    // Build a phrase-specific ABC string
-    const phraseAbc = buildPhraseAbc();
+    // Build phrase ABC directly from currentPhraseNotes (same source as display)
+    const tune = TUNES[currentTuneIndex];
+    const kLine = tune.abc.match(/K:[^\n]*/)?.[0] || 'K:C';
+    const mLine = tune.abc.match(/M:[^\n]*/)?.[0] || 'M:4/4';
+    const lLine = tune.abc.match(/L:[^\n]*/)?.[0] || 'L:1/8';
+    let phraseNoteStr = currentPhraseNotes.map(n => {
+      const midis = n.midis || [n.midi];
+      const noteStrs = midis.map(m => midiToAbcNote(m));
+      const dur = Math.round(n.duration / 0.125); // duration relative to L:1/8
+      const durStr = dur === 1 ? '' : String(dur);
+      if (noteStrs.length > 1) return '[' + noteStrs.join('') + ']' + durStr;
+      return noteStrs[0] + durStr;
+    }).join('');
+    const phraseAbc = `X:1\nT:Phrase\n${mLine}\n${lLine}\n${kLine}\n%%MIDI program 40\nQ:1/4=${tempo}\n${phraseNoteStr}|]\n`;
     console.log('Phrase ABC:', phraseAbc);
 
     // Render offscreen
