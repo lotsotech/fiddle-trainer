@@ -468,7 +468,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.10</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.11</div>
 </header>
 
 <div class="container">
@@ -913,22 +913,32 @@ function centsDiff(freq, targetMidi) {
 
 function midiToAbcNote(midi) {
   // Convert MIDI number to ABC notation note string
-  const noteNames = ['C','_D','D','_E','E','F','_G','G','_A','A','_B','B'];
+  // Use sharps (^) for accidentals — more natural for fiddle keys (G, D, A)
+  const noteNames = ['C','^C','D','^D','E','F','^F','G','^G','A','^A','B'];
   const noteIndex = ((midi % 12) + 12) % 12;
-  const octave = Math.floor(midi / 12) - 1; // MIDI octave
-  let abc = noteNames[noteIndex];
-  // ABC middle C (C4, MIDI 60) = 'C'
-  // C5 = 'c', C6 = 'c''
-  // C3 = 'C,', C2 = 'C,,'
-  if (octave >= 5) {
-    abc = abc.toLowerCase();
-    for (let i = 6; i <= octave; i++) abc += "'";
-  } else if (octave === 4) {
-    // default - uppercase, no modifier
-  } else {
-    for (let i = 3; i >= octave; i--) abc += ",";
+  const octave = Math.floor(midi / 12) - 1;
+  let noteName = noteNames[noteIndex];
+
+  // Check if this note is already in the key signature (no accidental needed)
+  const tune = TUNES[currentTuneIndex];
+  if (tune) {
+    const keySig = getKeySignature(tune.key);
+    const natural = noteName.replace('^','').replace('_','');
+    if (noteName.startsWith('^') && keySig.sharps.includes(natural)) {
+      noteName = natural; // key signature handles the sharp
+    }
   }
-  return abc;
+
+  // Apply octave: C4=uppercase, c5=lowercase
+  if (octave >= 5) {
+    noteName = noteName.replace(/[A-G]/g, c => c.toLowerCase());
+    for (let i = 6; i <= octave; i++) noteName += "'";
+  } else if (octave === 4) {
+    // default uppercase, no modifier
+  } else {
+    for (let i = 3; i >= octave; i--) noteName += ",";
+  }
+  return noteName;
 }
 
 // ============================================================
