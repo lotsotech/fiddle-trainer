@@ -468,7 +468,7 @@ header h1 span { color: var(--accent); }
 
 <header>
   <h1><span>Fiddle</span> Ear Trainer</h1>
-  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.7</div>
+  <div style="position:absolute;top:8px;right:12px;font-size:0.7rem;color:var(--text-dim);">v0.59.8</div>
 </header>
 
 <div class="container">
@@ -1116,44 +1116,10 @@ function highlightCurrentPhrase() {
 
   if (!visualObj || !visualObj[0]) return;
 
-  // First pass: detect pickup measure (measure 0 with fewer notes than expected)
+  // Measure = notes between bar lines. Measure 0 = before first bar (pickup).
   const lines = visualObj[0].lines;
-  let hasPickup = false;
-  let m0notes = 0;
-  let m1notes = 0;
-  let tempMeasure = 0;
-  for (const line of lines) {
-    if (!line.staff) continue;
-    for (const staff of line.staff) {
-      if (!staff.voices || !staff.voices[0]) continue;
-      for (const elem of staff.voices[0]) {
-        if (elem.el_type === 'bar') { tempMeasure++; continue; }
-        if (elem.el_type === 'note') {
-          if (tempMeasure === 0) m0notes++;
-          else if (tempMeasure === 1) m1notes++;
-        }
-      }
-    }
-  }
-  // If measure 0 has significantly fewer notes than measure 1, it's a pickup
-  if (m0notes > 0 && m0notes < m1notes * 0.6) {
-    hasPickup = true;
-  }
-
-  // Adjust phrase measures: if pickup, measure 0 is lumped with measure 1
-  let startMeasure, endMeasure;
-  if (hasPickup) {
-    if (currentPhraseIndex === 0) {
-      startMeasure = 0;
-      endMeasure = phraseLength; // includes pickup + first full measures
-    } else {
-      startMeasure = currentPhraseIndex * phraseLength;
-      endMeasure = startMeasure + phraseLength;
-    }
-  } else {
-    startMeasure = currentPhraseIndex * phraseLength;
-    endMeasure = startMeasure + phraseLength;
-  }
+  const startMeasure = currentPhraseIndex * phraseLength;
+  const endMeasure = startMeasure + phraseLength;
 
   let measureIndex = 0;
   let inPhrase = (measureIndex >= startMeasure && measureIndex < endMeasure);
