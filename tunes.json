@@ -536,5 +536,40 @@
     "source": "https://tunearch.org/wiki/Whiteface",
     "abc": "X:1\nT:Whiteface\nZ:trans. Mark Wardenburg, September 2025\nL:1/8\nM:none\nI:linebreak $\nK:G\n%%MIDI program 40\n|[M:4/4] |:\"Em\" (d e2) f gfgf | efed BAGD |$ !^!ABAG EDEG |1 ([EB]3 G) EGBA :|2 ([EB]3 G) EGED |:$\n[G,G]3 [G,G] [G,G]2 [DB]2- | [DB]2 AB AGED | E3 [EB]- [EB]DEG |1$ [EB]3 G EGED :|2 E3 D EGED |:$\n\"C\" [CE]3 [CE] [CE]2 DD | EDEG AGED |\"Em\" [B,E]3 [B,E] [B,E]2 [B,D][B,E]- |1,2$\n.[B,E][B,D][B,E]G [B,E]2 [G,D][G,D] :|3 [B,E][B,D][B,E][B,G] !fermata![B,E]GED |]",
     "editable": true
+  },
+  {
+    "name": "Red Wing",
+    "key": "G",
+    "source": "https://thesession.org/tunes/5307",
+    "abc": "X:1\nT:Red Wing\nM:4/4\nL:1/8\nK:G\n%%MIDI program 40\nD2|:G2(G1F)G2B2|d3B2|c2e2g2e2|d6B2|c2(c1B1)A2c2|B2(BA)G2B2|A2E2F2G2|ABAG FDEF|\nG2(GF)G2B2|d6B2|c2e2g2e2|d6B2|c2(cB)A2c2|B2(BA)G2B2|A2E2F2D2|G4(fe)|\ne4c4|e2g2f2e2|d4(B4|B2)d2(e2d2)|d4(A4|A2)d2(e2d2)|d4(B4|B2)g2(g2f2)|\ne4c4|e2g2f2e2|d4(B4|B2)d2(e2d2)|d4(A4|A2)c2(B2A2)|G4(G4|A2)D2E2F2:|\nG3A Bde(f|g2z2)[DG,]4||",
+    "editable": true
+  },
+  {
+    "name": "G-Scale",
+    "key": "G",
+    "source": "",
+    "abc": "X:1\nT:G-Scale\nM:4/4\nL:1/8\nR:reel\nK:G\n%%MIDI program 40\nG,2A,2B,2C2|D2E2F2G2|A2B2c2d2|e2f2g2a2|\na2g2f2e2|d2c2B2A2|G2F2E2D2|C2B,2A,2G,2||",
+    "editable": true
+  },
+  {
+    "name": "A-Scale",
+    "key": "A",
+    "source": "",
+    "abc": "X:1\nT:A-Scale\nM:4/4\nL:1/8\nR:reel\nK:A\n%%MIDI program 40\nA,2B,2C2D2|E2F2G2A2|B2c2d2e2|f2g2a2b2|\nb2a2g2f2|e2d2c2B2|A2G2F2E2|D2C2B,2A,2||",
+    "editable": true
+  },
+  {
+    "name": "C-Scale",
+    "key": "C",
+    "source": "",
+    "abc": "X:1\nT:C-Scale\nM:4/4\nL:1/8\nR:reel\nK:C\n%%MIDI program 40\nC2D2E2F2|G2A2B2c2|d2e2f2g2|a2b2c'2d'2|\nd'2c'2b2a2|g2f2e2d2|c2B2A2G2|F2E2D2C2||",
+    "editable": true
+  },
+  {
+    "name": "D-Scale",
+    "key": "D",
+    "source": "",
+    "abc": "X:1\nT:D-Scale\nM:4/4\nL:1/8\nR:reel\nK:D\n%%MIDI program 40\nD2E2F2G2|A2B2c2d2|e2f2g2a2|b2c'2d'2e'2|\ne'2d'2c'2b2|a2g2f2e2|d2c2B2A2|G2F2E2D2||",
+    "editable": true
   }
 ]
