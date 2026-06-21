@@ -1250,18 +1250,25 @@ function countMeasures() {
   if (!visualObj || !visualObj[0]) return 0;
   const lines = visualObj[0].lines;
   let count = 0;
+  let notesSinceLastBar = false;
   for (const line of lines) {
-    if (line.staff) {
-      for (const staff of line.staff) {
-        for (const voice of staff.voices) {
-          for (const elem of voice) {
-            if (elem.el_type === 'bar') count++;
+    if (!line.staff) continue;
+    for (const staff of line.staff) {
+      if (!staff.voices || !staff.voices[0]) continue;
+      for (const elem of staff.voices[0]) {
+        if (elem.el_type === 'note' || elem.el_type === 'rest') {
+          notesSinceLastBar = true;
+        } else if (elem.el_type === 'bar' && elem.type !== 'bar_left_repeat') {
+          // Only count a bar if notes appeared before it — skips leading bars,
+          // orphaned || after :||, and any other trailing/decorative barlines
+          if (notesSinceLastBar) {
+            count++;
+            notesSinceLastBar = false;
           }
         }
       }
     }
   }
-  // The first measure may not have a leading bar, so add 1
   return Math.max(count, 1);
 }
 
@@ -1300,7 +1307,8 @@ function highlightCurrentPhrase() {
       for (const elem of voice) {
         if (elem.el_type === 'bar') {
           // Only count bar lines after we've seen notes (so pickup stays in measure 0)
-          if (seenNotes) {
+          // Skip |: (bar_left_repeat) — it starts a section, doesn't end a measure
+          if (seenNotes && elem.type !== 'bar_left_repeat') {
             measureIndex++;
           }
           inPhrase = (measureIndex >= startMeasure && measureIndex < endMeasure);
@@ -1380,7 +1388,8 @@ function extractPhraseNotes(startMeasure, endMeasure) {
       const voice = staff.voices[0];
       for (const elem of voice) {
         if (elem.el_type === 'bar') {
-          measureIndex++;
+          // Skip |: (bar_left_repeat) — it starts a section, doesn't end a measure
+          if (elem.type !== 'bar_left_repeat') measureIndex++;
           continue;
         }
         if (elem.el_type === 'note' && elem.pitches) {
