@@ -159,30 +159,39 @@ header h1 span { color: var(--accent); }
   color: var(--text);
 }
 
-#paper {
+#tab-staff {
+  display: none;
   position: relative;
-}
-
-.tab-label {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transform: translateX(-50%);
-  line-height: 1.1;
-  pointer-events: none;
-  z-index: 10;
+  margin: 4px 0 0;
+  overflow: visible;
   user-select: none;
 }
-.tab-string {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: #2a6e4e;
+.tab-staff-line {
+  position: absolute;
+  left: 20px;
+  right: 0;
+  height: 1px;
+  background: #888;
 }
-.tab-finger {
-  font-size: 0.68rem;
+.tab-staff-label {
+  position: absolute;
+  left: 0;
+  width: 18px;
+  text-align: right;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  line-height: 1;
+}
+.tab-note-val {
+  position: absolute;
+  font-size: 0.75rem;
   font-weight: 700;
   color: #e94560;
+  background: var(--bg1);
+  padding: 0 2px;
+  line-height: 1;
+  transform: translate(-50%, -50%);
 }
 
 #paper svg * {
@@ -673,6 +682,7 @@ header h1 span { color: var(--accent); }
       <button class="notation-mode-btn" id="btnModeTab" onclick="setNotationMode('tab')">🎻 Tab (String+Finger)</button>
     </div>
     <div id="paper"></div>
+    <div id="tab-staff"></div>
   </div>
   <div id="sheetToggle" style="text-align:center;cursor:pointer;padding:6px;background:var(--bg3);border-radius:6px;margin:4px 0;font-size:0.85rem;color:var(--text-dim);user-select:none;" onclick="toggleSheet()">▼ Show Sheet Music</div>
 
@@ -1296,40 +1306,66 @@ function updateTabOverlay() {
 }
 
 function removeTabOverlay() {
-  document.querySelectorAll('#paper .tab-label').forEach(el => el.remove());
+  const tabStaff = document.getElementById('tab-staff');
+  tabStaff.innerHTML = '';
+  tabStaff.style.display = 'none';
+  tabStaff.style.height = '';
 }
 
 function renderTabOverlay() {
   if (!visualObj || !visualObj[0]) return;
   const paper = document.getElementById('paper');
+  const tabStaff = document.getElementById('tab-staff');
   const paperRect = paper.getBoundingClientRect();
-  const lines = visualObj[0].lines;
-  for (const line of lines) {
+
+  // E on top (highest string), G on bottom (lowest)
+  const STRING_ORDER = ['E', 'A', 'D', 'G'];
+  const LINE_SPACING = 18;
+  const TOP_PAD = 10;
+  tabStaff.style.height = (TOP_PAD * 2 + (STRING_ORDER.length - 1) * LINE_SPACING) + 'px';
+
+  STRING_ORDER.forEach((name, i) => {
+    const y = TOP_PAD + i * LINE_SPACING;
+    const line = document.createElement('div');
+    line.className = 'tab-staff-line';
+    line.style.top = y + 'px';
+    tabStaff.appendChild(line);
+    const lbl = document.createElement('span');
+    lbl.className = 'tab-staff-label';
+    lbl.textContent = name;
+    lbl.style.top = (y - 7) + 'px';
+    tabStaff.appendChild(lbl);
+  });
+
+  for (const line of visualObj[0].lines) {
     if (!line.staff) continue;
     for (const staff of line.staff) {
       if (!staff.voices || !staff.voices[0]) continue;
       for (const elem of staff.voices[0]) {
         if (elem.el_type !== 'note' || !elem.pitches || !elem.abselem || !elem.abselem.elemset) continue;
         const midis = elem.pitches.map(p => abcjsPitchToMidi(p)).filter(m => m > 0);
-        if (midis.length === 0) continue;
-        const midi = Math.min(...midis);
-        const tab = midiToFiddleTab(midi);
+        if (!midis.length) continue;
+        const tab = midiToFiddleTab(Math.min(...midis));
         if (!tab) continue;
         const svgEl = elem.abselem.elemset[0];
         if (!svgEl) continue;
-        const noteRect = svgEl.getBoundingClientRect();
-        if (noteRect.width === 0 && noteRect.height === 0) continue;
-        const left = noteRect.left - paperRect.left + noteRect.width / 2;
-        const top = noteRect.bottom - paperRect.top + 1;
-        const label = document.createElement('div');
-        label.className = 'tab-label';
-        label.innerHTML = `<span class="tab-string">${tab.string}</span><span class="tab-finger">${tab.finger}</span>`;
-        label.style.left = left + 'px';
-        label.style.top = top + 'px';
-        paper.appendChild(label);
+        const nr = svgEl.getBoundingClientRect();
+        if (!nr.width && !nr.height) continue;
+        const x = nr.left - paperRect.left + nr.width / 2;
+        const si = STRING_ORDER.indexOf(tab.string);
+        if (si === -1) continue;
+        const y = TOP_PAD + si * LINE_SPACING;
+        const num = document.createElement('span');
+        num.className = 'tab-note-val';
+        num.textContent = String(tab.finger);
+        num.style.left = x + 'px';
+        num.style.top = y + 'px';
+        tabStaff.appendChild(num);
       }
     }
   }
+
+  tabStaff.style.display = 'block';
 }
 
 // ============================================================
