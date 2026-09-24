@@ -1263,8 +1263,8 @@ function renderSheet() {
 // TABLATURE NOTATION
 // ============================================================
 function midiToFiddleTab(midi) {
-  // semitone → label: half-step placements get '-' suffix (low finger)
-  const S2F = ['0', '1-', '1', '2-', '2', '3-', '3', '4'];
+  // semitone → label: 0=open, 1=1-(low), 2=1, 3=2-(low), 4=2, 5=3, 6=3+(high), 7=4
+  const S2F = ['0', '1-', '1', '2-', '2', '3', '3+', '4'];
   const strings = [
     { name: 'G', open: 55 },
     { name: 'D', open: 62 },
