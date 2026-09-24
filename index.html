@@ -1318,52 +1318,68 @@ function renderTabOverlay() {
   const tabStaff = document.getElementById('tab-staff');
   const paperRect = paper.getBoundingClientRect();
 
-  // E on top (highest string), G on bottom (lowest)
   const STRING_ORDER = ['E', 'A', 'D', 'G'];
-  const LINE_SPACING = 18;
-  const TOP_PAD = 10;
-  tabStaff.style.height = (TOP_PAD * 2 + (STRING_ORDER.length - 1) * LINE_SPACING) + 'px';
+  const SS = 14;   // px between string lines
+  const TP = 8;    // top/bottom padding per row
+  const ROW_H = TP + (STRING_ORDER.length - 1) * SS + TP;
+  const LEFT = 22; // px reserved for string labels
 
-  STRING_ORDER.forEach((name, i) => {
-    const y = TOP_PAD + i * LINE_SPACING;
-    const line = document.createElement('div');
-    line.className = 'tab-staff-line';
-    line.style.top = y + 'px';
-    tabStaff.appendChild(line);
-    const lbl = document.createElement('span');
-    lbl.className = 'tab-staff-label';
-    lbl.textContent = name;
-    lbl.style.top = (y - 7) + 'px';
-    tabStaff.appendChild(lbl);
-  });
+  const abcLines = visualObj[0].lines.filter(l => l.staff);
 
-  for (const line of visualObj[0].lines) {
-    if (!line.staff) continue;
-    for (const staff of line.staff) {
+  abcLines.forEach(abcLine => {
+    const rowDiv = document.createElement('div');
+    rowDiv.style.cssText = `position:relative;height:${ROW_H}px;`;
+    tabStaff.appendChild(rowDiv);
+
+    // String lines and labels
+    STRING_ORDER.forEach((name, si) => {
+      const y = TP + si * SS;
+      const line = document.createElement('div');
+      line.className = 'tab-staff-line';
+      line.style.top = y + 'px';
+      rowDiv.appendChild(line);
+      const lbl = document.createElement('span');
+      lbl.className = 'tab-staff-label';
+      lbl.textContent = name;
+      lbl.style.top = (y - 7) + 'px';
+      rowDiv.appendChild(lbl);
+    });
+
+    // Notes and bar lines
+    for (const staff of abcLine.staff) {
       if (!staff.voices || !staff.voices[0]) continue;
       for (const elem of staff.voices[0]) {
-        if (elem.el_type !== 'note' || !elem.pitches || !elem.abselem || !elem.abselem.elemset) continue;
-        const midis = elem.pitches.map(p => abcjsPitchToMidi(p)).filter(m => m > 0);
-        if (!midis.length) continue;
-        const tab = midiToFiddleTab(Math.min(...midis));
-        if (!tab) continue;
+        if (!elem.abselem || !elem.abselem.elemset) continue;
         const svgEl = elem.abselem.elemset[0];
         if (!svgEl) continue;
         const nr = svgEl.getBoundingClientRect();
         if (!nr.width && !nr.height) continue;
-        const x = nr.left - paperRect.left + nr.width / 2;
-        const si = STRING_ORDER.indexOf(tab.string);
-        if (si === -1) continue;
-        const y = TOP_PAD + si * LINE_SPACING;
-        const num = document.createElement('span');
-        num.className = 'tab-note-val';
-        num.textContent = tab.label;
-        num.style.left = x + 'px';
-        num.style.top = y + 'px';
-        tabStaff.appendChild(num);
+        const x = nr.left + nr.width / 2 - paperRect.left;
+
+        if (elem.el_type === 'bar') {
+          const bar = document.createElement('div');
+          const topY = TP;
+          const h = (STRING_ORDER.length - 1) * SS;
+          bar.style.cssText = `position:absolute;left:${x}px;top:${topY}px;width:1px;height:${h}px;background:#666;`;
+          rowDiv.appendChild(bar);
+
+        } else if (elem.el_type === 'note' && elem.pitches) {
+          const midis = elem.pitches.map(p => abcjsPitchToMidi(p)).filter(m => m > 0);
+          if (!midis.length) continue;
+          const tab = midiToFiddleTab(Math.min(...midis));
+          if (!tab) continue;
+          const si = STRING_ORDER.indexOf(tab.string);
+          if (si === -1) continue;
+          const num = document.createElement('span');
+          num.className = 'tab-note-val';
+          num.textContent = tab.label;
+          num.style.left = x + 'px';
+          num.style.top = (TP + si * SS) + 'px';
+          rowDiv.appendChild(num);
+        }
       }
     }
-  }
+  });
 
   tabStaff.style.display = 'block';
 }
